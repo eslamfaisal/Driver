@@ -1,0 +1,182 @@
+<resources>
+    <string name="app_name">Driver</string>
+    <string name="tab_text_1">Purchase</string>
+    <string name="tab_text_2">Trip</string>
+    <string name="action_settings" translatable="false">Settings</string>
+    <string name="section_format" translatable="false">Hello World from section: %1$d</string>
+    <string name="title_activity_navigate" translatable="false">NavigateActivity</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="nav_header_title" translatable="false">Android Studio</string>
+    <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
+    <string name="nav_header_desc" translatable="false">Navigation header</string>
+    <string name="network_error">No internet connection</string>
+
+
+    <string name="login">LogIn</string>
+    <string name="new_account">New Account</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="password">password</string>
+    <string name="email">Email</string>
+    <string name="name">Name</string>
+    <string name="phone">phone</string>
+    <string name="register">Register</string>
+    <string name="sample_mail_id">name@example.com</string>
+    <string name="password_size">Password size must be atleast 6</string>
+    <string name="password_txt">******</string>
+    <string name="something_went_wrong">Something went wrong.</string>
+    <string name="something_went_wrong_net">Something went wrong, Please check internet connection.</string>
+    <string name="oops_connect_your_internet">Oops ! Connect your Internet.</string>
+    <string name="server_down">Unable to reach server.</string>
+    <string name="please_try_again">Please try again.</string>
+    <string name="email_validation">Enter your email ID.</string>
+    <string name="not_valid_email">Not a valid email ID.</string>
+    <string name="password_validation">Password could not be left empty.</string>
+    <string name="first_name_empty">First name required.</string>
+    <string name="last_name_empty">Last name required.</string>
+    <string name="mobile_number_empty">Mobile number required.</string>
+    <string name="first_name_no_number">Name Not match</string>
+    <string name="check_email_or_password">check email and password</string>
+    <string name="enter_your_email_to_reset">Enter your email to reset</string>
+    <string name="reset">Reset</string>
+    <string name="reset_password">Reset Password</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="enter_place">  Enter Place</string>
+    <string name="button_ok">Settings</string>
+    <string name="g_p_s">GPS</string>
+    <string name="open_gps">Please Open GPS</string>
+    <string name="receiver_place_my_location">Receiver place (my location)</string>
+    <string name="order_details">Order Details</string>
+    <string name="notes">Notes</string>
+    <string name="send_order">Send Order</string>
+    <string name="next">Next</string>
+    <string name="arrival_area">Arrival Area</string>
+    <string name="my_location">My Location</string>
+    <string name="receiver_place">receiver place</string>
+    <string name="get_location_permistion">Gimme the permission!</string>
+    <string name="gps_message">Would you mind to turn GPS on with high accuracy mode?</string>
+
+    <string name="purchase_order">Purchase order</string>
+    <string name="order_detail_2">\n to </string>
+    <string name="order_detail_3">\n total distance </string>
+    <string name="order_detail_4"> km </string>
+    <string name="order_detail_5">\n cost of km </string>
+    <string name="order_detail_6"> SR </string>
+    <string name="trip_order">Trip</string>
+    <string name="from">From:</string>
+    <string name="to">To:</string>
+    <string name="distance">Distance:</string>
+    <string name="cost">Cost:</string>
+    <string name="k_m">km</string>
+    <string name="omla">SR</string>
+    <string name="details">Details</string>
+    <string name="current_order_details">Details:</string>
+    <string name="current_order_notes">Notes:</string>
+    <string name="drivers">Drivers</string>
+    <string name="purchases">Purchases :</string>
+    <string name="accept">Accept</string>
+    <string name="refuse">Refuse</string>
+    <string name="no_drivers_accept_the_order_yet">No drivers accept the order yet</string>
+    <string name="city">City</string>
+    <string name="national_id">National ID</string>
+    <string name="car_id">car ID</string>
+    <string name="car_form_picture">Car form picture</string>
+    <string name="car_licence_picture">Car licence picture</string>
+    <string name="car_color">Car color</string>
+    <string name="picture_of_the_back_of_the_car">Picture for the back of the car</string>
+    <string name="picture_for_the_car_from_the_front">Picture for the car from the front</string>
+    <string name="car_model">Car model</string>
+    <string name="city_required">City is required</string>
+    <string name="national_id_required">National ID required</string>
+    <string name="car_Id_required">Car Id required</string>
+    <string name="car_color_required">car color required</string>
+    <string name="create_new_account">Create new account</string>
+    <string name="car_model_required">Car model required</string>
+    <string name="car_form_required">Picture for car form is required;</string>
+    <string name="front_car_pic_required">Picture for the back of the car is required</string>
+    <string name="license_pic_required">Car licence picture is required</string>
+    <string name="back_car_required">back car picture required</string>
+    <string name="new_order">New Order</string>
+    <string name="offline">OffLine</string>
+    <string name="no_orders_yet">No Orders yet</string>
+    <string name="online">Online</string>
+    <string name="estimated_time">Estimated Time :</string>
+    <string name="send_response">Send Response</string>
+    <string name="send_offer">Send Offer</string>
+    <string name="cost_hint">Cost</string>
+    <string name="offer_details">Offer Details</string>
+    <string name="refuse_order">Refuse Order</string>
+    <string name="offer_sent">Offer Sent</string>
+    <string name="order_cost">OrderCost :</string>
+
+    <array name="pugnotification_notification_types">
+        <item>Simple</item>
+        <item>Big Text</item>
+        <item>Inbox Style</item>
+    </array>
+
+    <array name="pugnotification_notification_inbox_lines">
+        <item>Message 1</item>
+        <item>Message 2</item>
+        <item>Message 3</item>
+        <item>Message 4</item>
+        <item>Message 5</item>
+    </array>
+
+    <string name="pugnotification_text_empty_fields">The fields can\'t be empty!</string>
+    <string name="the_offer_sent_pleas_wait_for_response">The offer sent , pleas wait for response</string>
+    <string name="time_just_now">just now</string>
+    <string name="time_a_minute">a minute</string>
+    <string name="time_minutes">minutes</string>
+    <string name="time_an_hour">an hour</string>
+    <string name="time_hours">hours</string>
+    <string name="time_yasterday">yesterday</string>
+    <string name="time_days">days</string>
+    <string name="write_message">Write Message</string>
+    <string name="current_order">Current Order</string>
+
+    <string name="Chats">Chats</string>
+    <string name="write_cost">Pleas write a cost</string>
+    <string name="write_time">Pleas write an estimated time</string>
+    <string name="order_refused">Order Refused</string>
+    <string name="the_order_accepted">The order accepted</string>
+    <string name="cancel_order">Cancel</string>
+    <string name="finish">Finish Order</string>
+
+
+    <string name="text_placeholder" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sed dapibus lectus. Aenean tempor accumsan massa ut pharetra. Pellentesque ac risus quam. Nunc faucibus lectus ut tellus tempus, eu elementum ex facilisis. Quisque commodo mollis lorem nec viverra. Nulla dolor urna, faucibus ac neque a, tristique feugiat diam. Duis vel sem sed lectus consectetur interdum. Etiam sagittis velit vel molestie pharetra. Phasellus id sem id leo pretium volutpat. Nullam a lacus eget lectus lacinia feugiat sed ac mauris. Donec lobortis ut eros sit amet mollis.</string>
+    <string name="small_text_placeholder" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sed dapibus lectus. Aenean tempor accumsan massa ut pharetra.</string>
+    <string name="smaller_text_placeholder" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sed dapibus lectus.</string>
+    <string name="tiny_text_placeholder" translatable="false">Lorem ipsum dolor</string>
+    <string name="direction_to_purchase_place">Direction To Purchase place</string>
+    <string name="direction_to_receiver_place">Direction to receiver place</string>
+    <string name="back_to_main">Back to main</string>
+    <string name="accept_offer">Accept your offer</string>
+    <string name="send_receipt">Send Receipt</string>
+    <string name="send_img">Send Image</string>
+    <string name="arabic">arabic</string>
+    <string name="cost_of_purchases">Cost of purchases: </string>
+    <string name="delivery_cost">Delivery cost: </string>
+    <string name="total_cost">Total cost: </string>
+    <string name="receipt_picture">Receipt Picture</string>
+    <string name="receipt">Receipt</string>
+    <string name="sent">Receipt sent</string>
+    <string name="purchases_cost_in_sr">Purchases cost in SR</string>
+    <string name="delivery_cost_in_sr">Delivery cost in SR</string>
+    <string name="sr">SR</string>
+    <string name="permission">Permission</string>
+    <string name="display_over_apps">Pleas make the app display over other apps</string>
+    <string name="settings">SETTINGS</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="update_profile">Update</string>
+    <string name="updated">Updated</string>
+    <string name="profile_image_required">Profile Image required</string>
+    <string name="profile_picture">Profile image</string>
+    <string name="log_out">Log out</string>
+    <string name="bo_driver">No drivers with this email</string>
+    <string name="getting_locations">Getting location...</string>
+
+
+</resources>

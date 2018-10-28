@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".fragments.TawselFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/send_order">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:text="@string/trip_order"
+                android:id="@+id/distance_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:text="@string/from"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingLeft="16dp"
+                    android:layout_marginBottom="8dp"/>
+                <TextView
+                    android:textSize="16sp"
+                    tools:text="cairo "
+                    android:id="@+id/from_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"/>
+            </LinearLayout>
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal">
+               <TextView
+                   android:textColor="@color/black"
+                   android:layout_marginBottom="8dp"
+                   android:textSize="16sp"
+                   android:text="@string/to"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:paddingStart="16dp"
+                   android:paddingLeft="16dp" />
+               <TextView
+                   android:layout_marginBottom="8dp"
+                   android:textSize="16sp"
+                   tools:text="@string/to"
+                   android:id="@+id/to_location"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content" />
+           </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:textColor="@color/black"
+                    android:layout_marginBottom="8dp"
+                    android:textSize="16sp"
+                    android:text="@string/distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingLeft="16dp"/>
+                <TextView
+                    android:layout_marginBottom="8dp"
+                    android:textSize="16sp"
+                    tools:text="@string/to"
+                    android:id="@+id/distance_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:textColor="@color/black"
+                    android:layout_marginBottom="8dp"
+                    android:textSize="16sp"
+                    android:text="@string/cost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingLeft="16dp" />
+                <TextView
+                    android:layout_marginBottom="8dp"
+                    android:textSize="16sp"
+                    tools:text="@string/to"
+                    android:id="@+id/cost_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/notes_details"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_below="@id/order_details"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/grey_border">
+
+
+                <EditText
+                    android:id="@+id/notes_details_edt"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:background="@null"
+                    android:hint="@string/notes"
+                    android:textColor="#000"
+                    android:textSize="15sp" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <com.rafakob.drawme.DrawMeButton xmlns:drawme="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/send_order"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/next"
+        android:textColor="@color/white"
+        drawme:dm_backColor="@color/colorPrimary"
+        drawme:dm_backColorDisabled="@color/colorPrimary"
+        drawme:dm_backColorPressed="@color/green"
+        drawme:dm_radius="16dp" />
+
+</RelativeLayout>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.rafakob.drawme.DrawMeButton
+            android:gravity="center"
+            android:drawablePadding="16dp"
+            android:padding="16dp"
+            android:drawableStart="@drawable/shopping_address_medume"
+            xmlns:drawme="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/go_arrival"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/direction_to_purchase_place"
+            android:textColor="@color/white"
+            drawme:dm_backColor="@color/green"
+            drawme:dm_backColorPressed="@color/colorPrimary"
+            drawme:dm_radius="16dp" />
+        <com.rafakob.drawme.DrawMeButton
+            android:id="@+id/go_receiver"
+            android:gravity="center"
+            android:drawablePadding="16dp"
+            android:padding="16dp"
+            android:drawableStart="@drawable/home_address_medume"
+            xmlns:drawme="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/direction_to_receiver_place"
+            android:textColor="@color/white"
+            drawme:dm_backColor="@color/green"
+            drawme:dm_backColorPressed="@color/colorPrimary"
+            drawme:dm_radius="16dp" />
+        <com.rafakob.drawme.DrawMeButton
+            android:id="@+id/go_main"
+            android:gravity="center"
+            android:drawablePadding="16dp"
+            android:padding="16dp"
+            xmlns:drawme="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/back_to_main"
+            android:textColor="@color/white"
+            drawme:dm_backColor="@color/green"
+            drawme:dm_backColorPressed="@color/colorPrimary"
+            drawme:dm_radius="16dp" />
+    </LinearLayout>
+
+
+</RelativeLayout>

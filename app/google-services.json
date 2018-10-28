@@ -1,0 +1,107 @@
+{
+  "project_info": {
+    "project_number": "627694432461",
+    "firebase_url": "https://repo-place.firebaseio.com",
+    "project_id": "repo-place",
+    "storage_bucket": "repo-place.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:627694432461:android:40f618b8bc5d469f",
+        "android_client_info": {
+          "package_name": "com.fekrah.customer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "627694432461-ropd3t0ndh9mlefuhe52k8b1eork79n0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fekrah.customer",
+            "certificate_hash": "34770699de8b9d399eee5a01b8ede5bf62535e46"
+          }
+        },
+        {
+          "client_id": "627694432461-9sjdcd68hl22u56v0c7dub80qneq830s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fekrah.customer",
+            "certificate_hash": "cc5c94f9cedee658e94774d742d691fcdc53052a"
+          }
+        },
+        {
+          "client_id": "627694432461-0u59gj2r8toqo420jf1qf03nik951vqn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgUvM6ikThdcXUnJs7jLj9g1QUJm0CIKw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "627694432461-0u59gj2r8toqo420jf1qf03nik951vqn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:627694432461:android:49cf462c149b1901",
+        "android_client_info": {
+          "package_name": "com.fekrah.driver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "627694432461-nmm2njmr7pucj6fa3ja4m2qgs01j53b2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fekrah.driver",
+            "certificate_hash": "91e92baa864f8136d1dfbdd98a37cb823af44d84"
+          }
+        },
+        {
+          "client_id": "627694432461-0u59gj2r8toqo420jf1qf03nik951vqn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgUvM6ikThdcXUnJs7jLj9g1QUJm0CIKw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "627694432461-0u59gj2r8toqo420jf1qf03nik951vqn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
