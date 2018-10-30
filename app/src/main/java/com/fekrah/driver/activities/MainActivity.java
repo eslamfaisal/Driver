@@ -1121,7 +1121,6 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
 //                results[0]= Float.parseFloat(time_distance[1]);
                         results[0] = time_distance[0];
                         results[1] = time_distance[1];
-                      //      placesViewHolder.placeDistance.setText(time_distance[0]);
                         }
 
                     });

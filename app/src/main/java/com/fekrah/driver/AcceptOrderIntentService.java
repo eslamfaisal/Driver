@@ -49,7 +49,6 @@ public class AcceptOrderIntentService extends IntentService {
                                 createNotifyAccept(MainActivity.user.getName(), MainActivity.user.getImg(), getString(R.string.accept_offer), "accept_order", 124);
                             }
 
-
                         }
                     }
 
