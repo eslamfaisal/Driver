@@ -1230,8 +1230,7 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
                         .target(new LatLng(location.getLatitude(), location.getLongitude()))
                         .zoom(17)
                         .build();
-
-                // if (!seen)
+                
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(SENDBIS), 5000, null);
             }
         }
