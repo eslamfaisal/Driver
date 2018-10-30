@@ -20,9 +20,9 @@
             android:layout_margin="16dp"
             android:text="@string/direction_to_purchase_place"
             android:textColor="@color/white"
-            drawme:dm_backColor="@color/green"
-            drawme:dm_backColorPressed="@color/colorPrimary"
-            drawme:dm_radius="16dp" />
+            drawme:dm_backColor="@color/colorPrimary"
+            drawme:dm_backColorPressed="@color/gray"
+            drawme:dm_radius="8dp" />
         <com.rafakob.drawme.DrawMeButton
             android:id="@+id/go_receiver"
             android:gravity="center"
@@ -35,9 +35,9 @@
             android:layout_margin="16dp"
             android:text="@string/direction_to_receiver_place"
             android:textColor="@color/white"
-            drawme:dm_backColor="@color/green"
-            drawme:dm_backColorPressed="@color/colorPrimary"
-            drawme:dm_radius="16dp" />
+            drawme:dm_backColor="@color/colorPrimary"
+            drawme:dm_backColorPressed="@color/green"
+            drawme:dm_radius="8dp" />
         <com.rafakob.drawme.DrawMeButton
             android:id="@+id/go_main"
             android:gravity="center"
@@ -49,9 +49,9 @@
             android:layout_margin="16dp"
             android:text="@string/back_to_main"
             android:textColor="@color/white"
-            drawme:dm_backColor="@color/green"
-            drawme:dm_backColorPressed="@color/colorPrimary"
-            drawme:dm_radius="16dp" />
+            drawme:dm_backColor="@color/colorPrimary"
+            drawme:dm_backColorPressed="@color/green"
+            drawme:dm_radius="8dp" />
     </LinearLayout>
 
 

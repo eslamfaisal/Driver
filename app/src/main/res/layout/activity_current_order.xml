@@ -44,17 +44,20 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+
+
+
+        <RelativeLayout
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginBottom="8dp"
-                android:paddingStart="16dp"
-                android:paddingLeft="16dp"
                 android:text="@string/from"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
@@ -63,25 +66,27 @@
                 android:id="@+id/from_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginStart="90dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
+                android:background="@drawable/ic_text_background_shape"
+                android:gravity="center_vertical"
+                android:padding="4dp"
                 android:textSize="16sp"
-                tools:text="cairo " />
-        </LinearLayout>
+                tools:text="@string/to" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
                 android:layout_marginBottom="8dp"
-                android:paddingStart="16dp"
-                android:paddingLeft="16dp"
+                android:gravity="center"
                 android:text="@string/to"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
@@ -90,24 +95,25 @@
                 android:id="@+id/to_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="8dp"
+                android:layout_marginStart="90dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
+                android:background="@drawable/ic_text_background_shape"
+                android:gravity="center_vertical"
+                android:padding="4dp"
                 android:textSize="16sp"
                 tools:text="@string/to" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginBottom="8dp"
-                android:paddingStart="16dp"
-                android:paddingLeft="16dp"
                 android:text="@string/distance"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
@@ -116,24 +122,27 @@
                 android:id="@+id/distance_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="90dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp"
+                android:background="@drawable/ic_text_background_shape"
+                android:gravity="start"
+                android:padding="4dp"
                 android:textSize="16sp"
                 tools:text="@string/to" />
-        </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginBottom="8dp"
-                android:paddingStart="16dp"
-                android:paddingLeft="16dp"
                 android:text="@string/cost"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
@@ -142,21 +151,27 @@
                 android:id="@+id/cost_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="90dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/ic_text_background_shape"
+                android:gravity="center_vertical"
+                android:padding="4dp"
                 android:textSize="16sp"
-                tools:text="ww" />
-        </LinearLayout>
+                tools:text="@string/to" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/order_details_tect"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginBottom="8dp"
-                android:paddingStart="16dp"
-                android:paddingLeft="16dp"
                 android:text="@string/purchases"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
@@ -165,25 +180,29 @@
                 android:id="@+id/details"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/order_details_tect"
+                android:layout_marginStart="16dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp"
-                android:textSize="16sp"
-                tools:text="@string/to" />
-        </LinearLayout>
+                android:background="@drawable/ic_text_background_shape"
+                android:gravity="center_vertical"
+                android:hint="@string/order_details"
+                android:padding="4dp"
+                android:textSize="16sp" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/order_notes_tect"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginBottom="8dp"
-                android:paddingStart="16dp"
-                android:paddingLeft="16dp"
-                android:text="@string/current_order_notes"
+                android:text="@string/notes"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
@@ -191,9 +210,20 @@
                 android:id="@+id/notes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                tools:text="ww" />
-        </LinearLayout>
+                android:layout_below="@id/order_notes_tect"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/ic_text_background_shape"
+                android:gravity="center_vertical"
+                android:hint="@string/notes"
+                android:padding="4dp"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
+
+
+
 
         <TextView
             android:id="@+id/responce"
@@ -293,54 +323,36 @@
             android:orientation="vertical"
             android:visibility="gone">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <TextView
+                    android:layout_centerVertical="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:layout_marginBottom="8dp"
-                    android:paddingStart="16dp"
-                    android:paddingLeft="16dp"
-                    android:text="@string/distance"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/offered_cost"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:textSize="16sp"
-                    tools:text="@string/to" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:paddingStart="16dp"
-                    android:paddingLeft="16dp"
                     android:text="@string/cost"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/offered_time"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/offered_cost"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="90dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/ic_text_background_shape"
+                    android:gravity="center_vertical"
+                    android:padding="4dp"
                     android:textSize="16sp"
-                    tools:text="ww" />
-            </LinearLayout>
+                    tools:text="@string/to" />
+
+            </RelativeLayout>
 
             <TextView
                 android:textSize="20sp"

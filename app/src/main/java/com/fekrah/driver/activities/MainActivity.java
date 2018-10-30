@@ -12,7 +12,9 @@ import android.content.Intent;
 
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 
 import android.net.Uri;
@@ -21,6 +23,7 @@ import android.os.Build;
 import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.support.annotation.CallSuper;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -68,12 +71,14 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.fekrah.driver.AcceptOrderIntentService;
 import com.fekrah.driver.FloatingService;
 import com.fekrah.driver.R;
 import com.fekrah.driver.SamplePresenter;
 
 import com.fekrah.driver.fragments.TalabatFragment;
 
+import com.fekrah.driver.helper.CalculateDistanceTime;
 import com.fekrah.driver.models.Driver;
 import com.fekrah.driver.models.Order;
 
@@ -96,6 +101,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -189,7 +195,7 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
     private String recieverLocationAdress;
     Timer timer;
 
-    public static float[] results = new float[1];
+    public static String[] results = new String[2];
     private View view;
     private Animation animation;
     public static Driver driver;
@@ -213,7 +219,9 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
 
     private boolean logout = false;
     private boolean onActivit = false;
+    public static  User user;
 
+    public static boolean accepted = false;
     public static boolean isOrderSent() {
         return orderSent;
     }
@@ -234,6 +242,7 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
         displayOverAppsAndConnectToClient();
 
         getDriverInfo();
+        startService(new Intent(MainActivity.this,AcceptOrderIntentService.class));
 
     }
 
@@ -295,6 +304,8 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
 
         mLayout = findViewById(R.id.sliding_layout);
         mLayout.setAnchorPoint(1f);
+
+
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
     }
 
@@ -326,10 +337,10 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
                 .child(FirebaseAuth.getInstance().getUid()).child("order");
 
         orderRef.addValueEventListener(orderListener);
-
+        //NotifyAccept();
     }
 
-    private void launchMap(String address, double r1, double r2, double a1, double a2) {
+    private void launchGoogleMap(String address, double r1, double r2, double a1, double a2) {
 
         String format = "geo:0,0?q=" + a1 + "," + a2 + address;
 
@@ -875,6 +886,8 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
                 });
     }
 
+
+
     private void counter() {
         i = 0;
         mProgressBar.setProgress(0);
@@ -1030,12 +1043,12 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
                     final LatLng myLocationLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                     receiverLocationMarkerOption = new MarkerOptions()
                             .position(receiverLatLng)
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.location))
+                            .icon(bitmapDescriptorFromVector(MainActivity.this ,R.drawable.ic_house_marker))
                             .title(getString(R.string.receiver_place) + " : " + order.getReceiver_location());
 
                     arrivalLocationMarkerOption = new MarkerOptions()
                             .position(arrivalLatLng)
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin))
+                            .icon(bitmapDescriptorFromVector(MainActivity.this ,R.drawable.ic_shop_marker))
                             .title(getString(R.string.arrival_area) + " : " + order.getArrival_location());
 
                     receiverLocationMarker = mMap.addMarker(receiverLocationMarkerOption);
@@ -1095,10 +1108,28 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
                                 }
                             });
 
-                    Location.distanceBetween(arrivalLatLng.latitude, arrivalLatLng.longitude,
-                            myLocationLatLng.latitude, myLocationLatLng.longitude, results);
+                    CalculateDistanceTime distance_task = new CalculateDistanceTime(MainActivity.this);
 
-                    talabatFragment.change(order, results);
+                    distance_task.getDirectionsUrl(new LatLng(arrivalLatLng.latitude, arrivalLatLng.longitude),
+                            new LatLng(myLocationLatLng.latitude, myLocationLatLng.longitude), "AIzaSyAnKvay92-zyf4Or37UL6tsEF7BL8PiC6U");
+
+                    distance_task.setLoadListener(new CalculateDistanceTime.taskCompleteListener() {
+                        @Override
+                        public void taskCompleted(String[] time_distance) {
+//                approximate_time.setText("" + time_distance[1]);
+//                approximate_diatance.setText("" + time_distance[0]);
+//                results[0]= Float.parseFloat(time_distance[1]);
+                        results[0] = time_distance[0];
+                        results[1] = time_distance[1];
+                      //      placesViewHolder.placeDistance.setText(time_distance[0]);
+                        }
+
+                    });
+
+//                    Location.distanceBetween(arrivalLatLng.latitude, arrivalLatLng.longitude,
+//                            myLocationLatLng.latitude, myLocationLatLng.longitude, results);
+
+                    talabatFragment.change(order);
 
                     receiverLat = receiverLatLng.latitude;
                     receiverLng = receiverLatLng.longitude;
@@ -1121,15 +1152,15 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
                                     startActivityForResult(intent, MY_PERMISSION);
                                 } else { // ADD THIS.
 
-                                    launchMap(recieverLocationAdress,
+                                    launchGoogleMap(recieverLocationAdress,
                                             receiverLat, receiverLng, arrivalLat, arrivalLng);
-                                    //launchMap();
+                                    //launchGoogleMap();
                                 }
 
                             } else { // ADD THIS.
-                                launchMap(recieverLocationAdress,
+                                launchGoogleMap(recieverLocationAdress,
                                         receiverLat, receiverLng, arrivalLat, arrivalLng);
-                                //launchMap();
+                                //launchGoogleMap();
 
                             }
 
@@ -1142,7 +1173,7 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     if (dataSnapshot.getValue() != null) {
-                                        User user = dataSnapshot.getValue(User.class);
+                                        user = dataSnapshot.getValue(User.class);
                                         if (user != null) {
 
                                             goMap.setVisibility(View.VISIBLE);
@@ -1166,7 +1197,6 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
                                             mProgressBar.setVisibility(View.VISIBLE);
                                             notificationContent(order.getDetails(), order.getArrival_location(), order.getReceiver_location());
                                             createNotify(user.getName(), user.getImg(), notificationContent(order.getDetails(), order.getArrival_location(), order.getReceiver_location()), "orders", 125);
-//
                                         }
 
                                     }
@@ -1213,5 +1243,108 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
         }
     };
 
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, @DrawableRes int vectorDrawableResourceId) {
+        Drawable background = ContextCompat.getDrawable(context, vectorDrawableResourceId);
+        background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());
+        // Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId);
+        //vectorDrawable.setBounds(40, 20, vectorDrawable.getIntrinsicWidth() + 40, vectorDrawable.getIntrinsicHeight() + 20);
+        Bitmap bitmap = Bitmap.createBitmap(background.getIntrinsicWidth()+20, background.getIntrinsicHeight()+20, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        background.draw(canvas);
+        //vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    private void NotifyAccept(){
+        FirebaseDatabase.getInstance().getReference().child("drivers_current_order")
+                .child(FirebaseAuth.getInstance().getUid()).child("offer")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getValue()!=null){
+                            if (dataSnapshot.getValue().toString().equals("accept")){
+                                if (!accepted){
+                                    accepted=true;
+                                    createNotifyAccept(user.getName(),user.getImg(),getString(R.string.accept_offer),"accept_order",124);
+                                }
+                            }
+
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+    }
+    public void createNotifyAccept(final String name, String img, final String content, final String id, final int id2) {
+
+        Intent notifyIntent = new Intent(this, ChatsRoomsActivity.class);
+        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        // Create the PendingIntent
+        final PendingIntent notifyPendingIntent = PendingIntent.getActivity(
+                this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
+        );
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+
+            NotificationChannel channel = new NotificationChannel(id, "Accept Order", importance);
+            channel.setDescription("Notifications for accepted orders ");
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = this.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        final Bitmap[] theBitmap = {null};
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.placeholder(R.drawable.ic_dummy_user);
+        requestOptions.error(R.drawable.ic_dummy_user);
+        Glide.with(this).asBitmap().
+                load(img).into(new SimpleTarget<Bitmap>(90, 90) {
+            @Override
+            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                theBitmap[0] = resource;
+                CharSequence charSequence = (CharSequence) content;
+                NotificationCompat.Style d = new NotificationCompat.BigTextStyle()
+                        .bigText(charSequence);
+
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(MainActivity.this, id)
+                        .setSmallIcon(R.drawable.shoppingcart)
+                        .setContentTitle(name)
+                        .setLargeIcon(resource)
+                        .setContentText(content)
+                        .setStyle(d)
+                        .setColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary))
+                        .setContentIntent(notifyPendingIntent)
+                        .setAutoCancel(true)
+                        .setVibrate(new long[]{1000, 100, 1000, 100})
+                        .setAutoCancel(true)
+                        .setSound(Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.new_order))
+                        .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(MainActivity.this);
+
+                notificationManager.notify(id2, mBuilder.build());
+
+//                try {
+//                    Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+//
+//                    ringtone = RingtoneManager.getRingtone(getActivity(), Uri.parse("android.resource://" + getActivity().getPackageName() + "/" + R.raw.new_order));
+//                    if (!ringtone.isPlaying())
+//                        ringtone.play();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+
+            }
+
+        });
+
+    }
 
 }

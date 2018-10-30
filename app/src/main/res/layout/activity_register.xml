@@ -26,13 +26,12 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:background="@drawable/ic_edit_text_background_shape">
-
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="45dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginLeft="12dp"
+                    android:background="@drawable/ic_icon_background_shape"
+                    android:padding="8dp"
                     android:src="@drawable/ic_account_circle_black_24dp" />
 
                 <EditText
@@ -45,7 +44,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginRight="4dp"
-                    android:background="@color/gray"
+                    android:background="@color/white"
                     android:gravity="start"
                     android:hint="@string/name"
                     android:imeOptions="actionDone"
@@ -60,14 +59,14 @@
                 android:layout_margin="16dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/ic_edit_text_background_shape">
-
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="45dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginLeft="12dp"
+                    android:background="@drawable/ic_icon_background_shape"
+                    android:padding="8dp"
                     android:src="@drawable/ic_email_blue" />
+
 
                 <EditText
                     android:text="eslam.faisal.ef@gmail.com"
@@ -79,7 +78,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginRight="4dp"
-                    android:background="@color/gray"
+                    android:background="@color/white"
                     android:gravity="start"
                     android:hint="@string/email"
                     android:imeOptions="actionDone"
@@ -95,14 +94,14 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/ic_edit_text_background_shape">
-
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="45dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginLeft="12dp"
+                    android:background="@drawable/ic_icon_background_shape"
+                    android:padding="8dp"
                     android:src="@drawable/ic_key" />
+
 
                 <EditText
                     android:text="123456789"
@@ -114,7 +113,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginRight="4dp"
-                    android:background="@color/gray"
+                    android:background="@color/white"
                     android:gravity="start"
                     android:hint="@string/password"
                     android:imeOptions="actionDone"
@@ -131,14 +130,14 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/ic_edit_text_background_shape">
-
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="45dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginLeft="12dp"
+                    android:background="@drawable/ic_icon_background_shape"
+                    android:padding="8dp"
                     android:src="@drawable/ic_call_black_24dp" />
+
 
                 <EditText
                     android:text="01067457665"
@@ -150,7 +149,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginRight="4dp"
-                    android:background="@color/gray"
+                    android:background="@color/white"
                     android:gravity="start"
                     android:hint="@string/phone"
                     android:imeOptions="actionDone"
@@ -167,13 +166,12 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/ic_edit_text_background_shape">
-
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="45dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginLeft="12dp"
+                    android:background="@drawable/ic_icon_background_shape"
+                    android:padding="8dp"
                     android:src="@drawable/ic_city_location" />
 
                 <EditText
@@ -186,7 +184,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginRight="4dp"
-                    android:background="@color/gray"
+                    android:background="@color/white"
                     android:gravity="start"
                     android:hint="@string/city"
                     android:imeOptions="actionDone"
@@ -203,14 +201,14 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/ic_edit_text_background_shape">
-
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="45dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginLeft="12dp"
+                    android:background="@drawable/ic_icon_background_shape"
+                    android:padding="8dp"
                     android:src="@drawable/ic_id_card" />
+
 
                 <EditText
                     android:text="123321123321"
@@ -222,7 +220,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginRight="4dp"
-                    android:background="@color/gray"
+                    android:background="@color/white"
                     android:gravity="start"
                     android:hint="@string/national_id"
                     android:imeOptions="actionDone"
@@ -239,13 +237,12 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/ic_edit_text_background_shape">
-
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="45dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginLeft="12dp"
+                    android:background="@drawable/ic_icon_background_shape"
+                    android:padding="8dp"
                     android:src="@drawable/ic_car_id" />
 
                 <EditText
@@ -258,7 +255,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginRight="4dp"
-                    android:background="@color/gray"
+                    android:background="@color/white"
                     android:gravity="start"
                     android:hint="@string/car_id"
                     android:imeOptions="actionDone"
@@ -275,13 +272,12 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/ic_edit_text_background_shape">
-
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="45dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginLeft="12dp"
+                    android:background="@drawable/ic_icon_background_shape"
+                    android:padding="8dp"
                     android:src="@drawable/ic_car_color" />
 
                 <EditText
@@ -294,7 +290,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginRight="4dp"
-                    android:background="@color/gray"
+                    android:background="@color/white"
                     android:gravity="start"
                     android:hint="@string/car_color"
                     android:imeOptions="actionDone"
@@ -311,13 +307,12 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/ic_edit_text_background_shape">
-
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="45dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginLeft="12dp"
+                    android:background="@drawable/ic_icon_background_shape"
+                    android:padding="8dp"
                     android:src="@drawable/ic_car_model" />
 
                 <EditText
@@ -330,7 +325,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginRight="4dp"
-                    android:background="@color/gray"
+                    android:background="@color/white"
                     android:gravity="start"
                     android:hint="@string/car_model"
                     android:imeOptions="actionDone"
@@ -371,7 +366,7 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginEnd="4dp"
                         android:layout_marginRight="4dp"
-                        android:background="@color/gray"
+                        android:background="@color/white"
                         android:gravity="start"
                         android:hint="@string/profile_picture"
                         android:maxLines="1"
@@ -427,7 +422,7 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginEnd="4dp"
                         android:layout_marginRight="4dp"
-                        android:background="@color/gray"
+                        android:background="@color/white"
                         android:gravity="start"
                         android:hint="@string/car_form_picture"
                         android:maxLines="1"
@@ -482,7 +477,7 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginEnd="4dp"
                         android:layout_marginRight="4dp"
-                        android:background="@color/gray"
+                        android:background="@color/white"
                         android:gravity="start"
                         android:hint="@string/car_licence_picture"
                         android:maxLines="1"
@@ -537,7 +532,7 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginEnd="4dp"
                         android:layout_marginRight="4dp"
-                        android:background="@color/gray"
+                        android:background="@color/white"
                         android:gravity="start"
                         android:hint="@string/picture_for_the_car_from_the_front"
                         android:maxLines="1"
@@ -592,7 +587,7 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginEnd="4dp"
                         android:layout_marginRight="4dp"
-                        android:background="@color/gray"
+                        android:background="@color/white"
                         android:gravity="start"
                         android:hint="@string/picture_of_the_back_of_the_car"
                         android:maxLines="1"

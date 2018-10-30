@@ -197,33 +197,7 @@ public class TalabatFragment extends Fragment {
             }
         });
         hideOrder();
-        FirebaseDatabase.getInstance().getReference().child("drivers_current_order")
-                .child(FirebaseAuth.getInstance().getUid()).child("offer")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.getValue()!=null){
 
-                            if (dataSnapshot.getValue().toString().equals("sent")){
-                                showofferdView();
-
-                            }
-
-                            else if (dataSnapshot.getValue().toString().equals("accept"))
-                            {
-                                showAccepted();
-                                createNotify(senderNameText,senderImgTextg,getString(R.string.accept_offer),"accept_order",124);
-
-                            }
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
 
         goChats.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -256,7 +230,7 @@ public class TalabatFragment extends Fragment {
         return mainView;
     }
 
-    public void change(Order order, float[] results) {
+    public void change(Order order) {
         if (order != null) {
             this.order = order;
             to.setText(order.getReceiver_location());
@@ -320,73 +294,6 @@ public class TalabatFragment extends Fragment {
         emptyOrder.setVisibility(View.VISIBLE);
     }
 
-    public void createNotify(final String name, String img, final String content, final String id, final int id2) {
-
-        Intent notifyIntent = new Intent(getActivity(), ChatsRoomsActivity.class);
-        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        // Create the PendingIntent
-        final PendingIntent notifyPendingIntent = PendingIntent.getActivity(
-                getActivity(), 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
-        );
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-
-            NotificationChannel channel = new NotificationChannel(id, "Accept Order", importance);
-            channel.setDescription("Notifications for accepted orders ");
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-
-        final Bitmap[] theBitmap = {null};
-        RequestOptions requestOptions = new RequestOptions();
-        requestOptions.placeholder(R.drawable.ic_dummy_user);
-        requestOptions.error(R.drawable.ic_dummy_user);
-        Glide.with(getActivity()).asBitmap().
-                load(img).into(new SimpleTarget<Bitmap>(90, 90) {
-            @Override
-            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                theBitmap[0] = resource;
-                CharSequence charSequence = (CharSequence) content;
-                NotificationCompat.Style d = new NotificationCompat.BigTextStyle()
-                        .bigText(charSequence);
-
-                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getActivity(), id)
-                        .setSmallIcon(R.drawable.shoppingcart)
-                        .setContentTitle(name)
-                        .setLargeIcon(resource)
-                        .setContentText(content)
-                        .setStyle(d)
-                        .setColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary))
-                        .setContentIntent(notifyPendingIntent)
-                        .setAutoCancel(true)
-                        .setVibrate(new long[]{1000, 100, 1000, 100})
-                        .setAutoCancel(true)
-                        .setSound(Uri.parse("android.resource://"+getActivity().getPackageName()+"/"+R.raw.new_order))
-                        .setPriority(NotificationCompat.PRIORITY_HIGH);
-
-                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
-
-                notificationManager.notify(id2, mBuilder.build());
-
-//                try {
-//                    Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-//
-//                    ringtone = RingtoneManager.getRingtone(getActivity(), Uri.parse("android.resource://" + getActivity().getPackageName() + "/" + R.raw.new_order));
-//                    if (!ringtone.isPlaying())
-//                        ringtone.play();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-
-            }
-
-        });
-
-    }
 
 
 }

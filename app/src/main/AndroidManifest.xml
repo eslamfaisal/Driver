@@ -38,15 +38,19 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".activities.OldMainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".activities.ResetPassword"
             android:parentActivityName=".activities.LoginActivity" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".activities.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".activities.SplashActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
             <intent-filter>
@@ -55,35 +59,49 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.Buttons"></activity>
+        <activity android:name=".activities.Buttons"
+            android:screenOrientation="portrait"></activity>
         <activity
+            android:screenOrientation="portrait"
             android:name=".activities.RegisterActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
             android:label="@string/register" />
-        <activity android:name=".activities.MyMapActivity" />
+        <activity android:name=".activities.MyMapActivity"
+            android:screenOrientation="portrait"/>
         <activity
+            android:screenOrientation="portrait"
             android:name=".activities.MainActivity"
             android:label="بالعافية"
             android:launchMode="singleTask"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
-        <activity android:name=".SampleActivity" />
-        <activity android:name=".activities.OrdersActivity" />
+        <activity android:name=".SampleActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.OrdersActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.CurrentOrderActivity"
             android:label="@string/current_order"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.ChatsRoomsActivity"
             android:label="@string/Chats"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.ChatActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            android:screenOrientation="portrait"/>
 
-        <service android:name=".FloatingService" />
+        <service android:name=".FloatingService"
+            android:screenOrientation="portrait"/>
 
-        <activity android:name=".activities.ReceiptOrderActivity" />
+        <service android:name=".AcceptOrderIntentService"/>
+        <activity android:name=".activities.ReceiptOrderActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".activities.EditProfileActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

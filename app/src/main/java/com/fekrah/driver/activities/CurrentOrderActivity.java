@@ -1,8 +1,18 @@
 package com.fekrah.driver.activities;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,7 +25,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.fekrah.driver.R;
 import com.fekrah.driver.adapters.AcceptedOrderDriversAdapter;
 import com.fekrah.driver.fragments.TalabatFragment;
@@ -93,9 +108,6 @@ public class CurrentOrderActivity extends BaseActivity {
     @BindView(R.id.offered_cost)
     TextView offerdCost;
 
-    @BindView(R.id.offered_time)
-    TextView offerdTime;
-
     @BindView(R.id.go_chats)
     DrawMeButton goChats;
 
@@ -165,12 +177,14 @@ public class CurrentOrderActivity extends BaseActivity {
 //                    displaySnackbar(getString(R.string.write_time));
 //                    return;
 //                }
+                //String result = results[0].substring(0, results[0].length() - 2);
+
                 String key = FirebaseDatabase.getInstance().getReference().push().getKey();
                 final OrderResponse offer = new OrderResponse(
                         MainActivity.driver.getName(),
                         key,
                         costEdt.getText().toString(),
-                        MainActivity.results[0]+getString(R.string.k_m),
+                        MainActivity.results[0],
                         MainActivity.driver.getUser_key(),
                         MainActivity.driver.getImg(),
                         "",
@@ -211,8 +225,15 @@ public class CurrentOrderActivity extends BaseActivity {
                         if (dataSnapshot.getValue()!=null){
                             if (dataSnapshot.getValue().toString().equals("sent"))
                             showOfferedView();
-                            else if (dataSnapshot.getValue().toString().equals("accept"))
-                            showAccepted();
+                            else if (dataSnapshot.getValue().toString().equals("accept")){
+                                showAccepted();
+//                                Toast.makeText(CurrentOrderActivity.this, ""+MainActivity.accepted, Toast.LENGTH_SHORT).show();
+//                                if (!MainActivity.accepted){
+//                                    MainActivity.accepted=true;
+//                                    createNotifyAccept(MainActivity.user.getName(),MainActivity.user.getImg(),getString(R.string.accept_offer),"accept_order",124);
+//                                }
+                            }
+
                         }
                     }
 
@@ -238,7 +259,15 @@ public class CurrentOrderActivity extends BaseActivity {
             }
         });
 
+
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //NotifyAccept();
+    }
+
     private void counter() {
         mProgressBar = (ProgressBar) findViewById(R.id.progressbar);
         mProgressBar.setProgress(i);
@@ -265,7 +294,6 @@ public class CurrentOrderActivity extends BaseActivity {
 
     private void showOfferedView() {
         offerdCost.setText(costEdt.getText().toString().trim());
-        offerdTime.setText(estimatedTimeEdt.getText().toString().trim());
         sendOfferView.setVisibility(View.GONE);
         offerdView.setVisibility(View.VISIBLE);
         acceptedOrderView.setVisibility(View.GONE);
@@ -285,4 +313,97 @@ public class CurrentOrderActivity extends BaseActivity {
         orderView.setVisibility(View.GONE);
         emptyOrder.setVisibility(View.VISIBLE);
     }
+
+    private void NotifyAccept(){
+        FirebaseDatabase.getInstance().getReference().child("drivers_current_order")
+                .child(FirebaseAuth.getInstance().getUid()).child("offer")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getValue()!=null){
+                            if (dataSnapshot.getValue().toString().equals("accept")){
+                                if (!MainActivity.accepted){
+                                    MainActivity.accepted=true;
+                                    createNotifyAccept(MainActivity.user.getName(),MainActivity.user.getImg(),getString(R.string.accept_offer),"accept_order",124);
+                                }
+                            }
+
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+    }
+    public void createNotifyAccept(final String name, String img, final String content, final String id, final int id2) {
+
+        Intent notifyIntent = new Intent(this, ChatsRoomsActivity.class);
+        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        // Create the PendingIntent
+        final PendingIntent notifyPendingIntent = PendingIntent.getActivity(
+                this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
+        );
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+
+            NotificationChannel channel = new NotificationChannel(id, "Accept Order", importance);
+            channel.setDescription("Notifications for accepted orders ");
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = this.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        final Bitmap[] theBitmap = {null};
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.placeholder(R.drawable.ic_dummy_user);
+        requestOptions.error(R.drawable.ic_dummy_user);
+        Glide.with(this).asBitmap().
+                load(img).into(new SimpleTarget<Bitmap>(90, 90) {
+            @Override
+            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                theBitmap[0] = resource;
+                CharSequence charSequence = (CharSequence) content;
+                NotificationCompat.Style d = new NotificationCompat.BigTextStyle()
+                        .bigText(charSequence);
+
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(CurrentOrderActivity.this, id)
+                        .setSmallIcon(R.drawable.shoppingcart)
+                        .setContentTitle(name)
+                        .setLargeIcon(resource)
+                        .setContentText(content)
+                        .setStyle(d)
+                        .setColor(ContextCompat.getColor(CurrentOrderActivity.this, R.color.colorPrimary))
+                        .setContentIntent(notifyPendingIntent)
+                        .setAutoCancel(true)
+                        .setVibrate(new long[]{1000, 100, 1000, 100})
+                        .setAutoCancel(true)
+                        .setSound(Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.new_order))
+                        .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(CurrentOrderActivity.this);
+
+                notificationManager.notify(id2, mBuilder.build());
+
+//                try {
+//                    Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+//
+//                    ringtone = RingtoneManager.getRingtone(getActivity(), Uri.parse("android.resource://" + getActivity().getPackageName() + "/" + R.raw.new_order));
+//                    if (!ringtone.isPlaying())
+//                        ringtone.play();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+
+            }
+
+        });
+
+    }
+
 }

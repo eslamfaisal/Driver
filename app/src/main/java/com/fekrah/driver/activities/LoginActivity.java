@@ -51,13 +51,13 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ViewPump.init(ViewPump.builder()
-                .addInterceptor(new CalligraphyInterceptor(
-                        new CalligraphyConfig.Builder()
-                                .setDefaultFontPath("fonts/AdvertisingBold.ttf")
-                                .setFontAttrId(R.attr.fontPath)
-                                .build()))
-                .build());
+//        ViewPump.init(ViewPump.builder()
+//                .addInterceptor(new CalligraphyInterceptor(
+//                        new CalligraphyConfig.Builder()
+//                                .setDefaultFontPath("fonts/AdvertisingBold.ttf")
+//                                .setFontAttrId(R.attr.fontPath)
+//                                .build()))
+//                .build());
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         Utility.hideSoftKeyboard(this);
@@ -169,8 +169,8 @@ public class LoginActivity extends BaseActivity {
                 });
     }
 
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
-    }
+//    @Override
+//    protected void attachBaseContext(Context newBase) {
+//        super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase));
+//    }
 }

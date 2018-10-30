@@ -107,15 +107,15 @@ public class FloatingService extends FloatingBubbleService {
         Context context = getApplicationContext();
         return new FloatingBubbleConfig.Builder()
                 .bubbleIcon(ContextCompat.getDrawable(context, R.mipmap.ic_launcher_round))
-                .removeBubbleIcon(ContextCompat.getDrawable(context, com.bsk.floatingbubblelib.R.drawable.close_default_icon))
+                .removeBubbleIcon(ContextCompat.getDrawable(context, R.drawable.error))
                 .bubbleIconDp(54)
                 .expandableView(view)
-                .removeBubbleIconDp(54)
-                .paddingDp(16)
-                .borderRadiusDp(16)
+                .removeBubbleIconDp(65)
+                .paddingDp(8)
+                .borderRadiusDp(8)
                 .physicsEnabled(true)
                 .expandableColor(R.color.gray)
-                .triangleColor(0xFF215A64)
+                .triangleColor(R.color.gray)
                 .gravity(Gravity.LEFT)
                 .build();
 
