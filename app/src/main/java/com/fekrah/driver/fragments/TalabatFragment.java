@@ -97,7 +97,7 @@ public class TalabatFragment extends Fragment {
     TextView senderName;
 
     @BindView(R.id.offered_view)
-    View offerdView ;
+    View offerdView;
 
     @BindView(R.id.order_action_buttons)
     View offerActionButtons;
@@ -115,7 +115,7 @@ public class TalabatFragment extends Fragment {
     private String senderNameText;
     private String senderImgTextg;
 
-    private void showofferdView(){
+    private void showofferdView() {
         offerdView.setVisibility(View.VISIBLE);
         offerActionButtons.setVisibility(View.GONE);
         acceptedOrderView.setVisibility(View.GONE);
@@ -143,6 +143,7 @@ public class TalabatFragment extends Fragment {
         // Inflate the layout for this fragment
         View mainView = inflater.inflate(R.layout.fragment_talabat2, container, false);
         ButterKnife.bind(this, mainView);
+        hideOrder();
 
         send_offer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,13 +162,13 @@ public class TalabatFragment extends Fragment {
                         .child(FirebaseAuth.getInstance().getUid()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             FirebaseDatabase.getInstance().getReference().child("drivers_state")
                                     .child(FirebaseAuth.getInstance().getUid()).child("has_order").setValue("no")
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()){
+                                            if (task.isSuccessful()) {
                                                 MainActivity.setOrderSent(false);
                                                 MainActivity.mCountDownTimer.cancel();
                                                 MainActivity.mCountDownTimer.onFinish();
@@ -181,13 +182,22 @@ public class TalabatFragment extends Fragment {
                 });
             }
         });
-
         FirebaseDatabase.getInstance().getReference().child("drivers_current_order")
                 .child(FirebaseAuth.getInstance().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue()==null){
+                if (dataSnapshot.getValue() == null) {
                     hideOrder();
+                } else {
+                    if (dataSnapshot.child("offer").getValue() != null) {
+                        
+                        if (dataSnapshot.child("offer").getValue().toString().equals("accept")) {
+                            showAccepted();
+                        } else if (dataSnapshot.child("offer").getValue().toString().equals("sent")) {
+                            showofferdView();
+
+                        }
+                    }
                 }
             }
 
@@ -196,7 +206,6 @@ public class TalabatFragment extends Fragment {
 
             }
         });
-        hideOrder();
 
 
         goChats.setOnClickListener(new View.OnClickListener() {
@@ -245,9 +254,9 @@ public class TalabatFragment extends Fragment {
                     .addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.getValue()!=null){
+                            if (dataSnapshot.getValue() != null) {
                                 User user = dataSnapshot.getValue(User.class);
-                                if (user!=null){
+                                if (user != null) {
                                     senderNameText = user.getName();
                                     senderName.setText(senderNameText);
                                     senderImgTextg = user.getImg();
@@ -277,7 +286,7 @@ public class TalabatFragment extends Fragment {
         offerActionText.setVisibility(View.VISIBLE);
     }
 
-    private void showOrder(){
+    private void showOrder() {
         orderView.setVisibility(View.VISIBLE);
         offerActionText.setVisibility(View.GONE);
         offerActionButtons.setVisibility(View.VISIBLE);
@@ -287,13 +296,12 @@ public class TalabatFragment extends Fragment {
 
     }
 
-    private void hideOrder(){
+    private void hideOrder() {
         orderView.setVisibility(View.GONE);
         offerActionText.setVisibility(View.GONE);
         offerActionButtons.setVisibility(View.GONE);
         emptyOrder.setVisibility(View.VISIBLE);
     }
-
 
 
 }

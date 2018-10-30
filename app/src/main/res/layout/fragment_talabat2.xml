@@ -299,6 +299,7 @@
             drawme:dm_backColorPressed="@color/colorPrimary"
             drawme:dm_radius="16dp" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_alignParentBottom="true"
         android:id="@+id/offered_view"
@@ -315,6 +316,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_alignParentBottom="true"
         android:visibility="gone"
