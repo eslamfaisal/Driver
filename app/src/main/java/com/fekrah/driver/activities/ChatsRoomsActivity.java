@@ -85,11 +85,11 @@ public class ChatsRoomsActivity extends AppCompatActivity {
                     Room room = dataSnapshot.getValue(Room.class);
                     int index = usersAdapter.indexOfRoom(room.getRoom_key());
                     if (index == -1) {
-                        if (!room.getLast_message().equals("")) {
+                        //    if (!room.getLast_message().equals("")) {
                             usersAdapter.addRoom(0, room);
                             usersAdapter.addKey(0, room.getRoom_key());
                         }
-                    }
+                    // }
 
                 }
 
@@ -122,13 +122,13 @@ public class ChatsRoomsActivity extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
                 Room room = dataSnapshot.getValue(Room.class);
-                if (!room.getLast_message().equals("")) {
+                //if (!room.getLast_message().equals("")) {
                     int index = usersAdapter.indexOfRoom(room.getRoom_key());
                     if (index == -1) {
                         usersAdapter.addRoom(0, room);
                         usersAdapter.addKey(0, room.getRoom_key());
                     }
-                }
+                // }
 
             }
 
@@ -136,7 +136,7 @@ public class ChatsRoomsActivity extends AppCompatActivity {
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
                 Room room = dataSnapshot.getValue(Room.class);
-                if (!room.getLast_message().equals("")) {
+                //  if (!room.getLast_message().equals("")) {
                     int index = usersAdapter.indexOfRoom(room.getRoom_key());
                     if (index != -1) {
                         usersAdapter.removeKey(index);
@@ -147,7 +147,7 @@ public class ChatsRoomsActivity extends AppCompatActivity {
                         usersAdapter.addRoom(0, room);
                         usersAdapter.addKey(0, room.getRoom_key());
                     }
-                }
+                //  }
 
             }
 

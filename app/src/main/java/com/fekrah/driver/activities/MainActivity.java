@@ -242,7 +242,6 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
         displayOverAppsAndConnectToClient();
 
         getDriverInfo();
-        startService(new Intent(MainActivity.this,AcceptOrderIntentService.class));
 
     }
 
@@ -312,7 +311,7 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
     private void getDriverInfo() {
         FirebaseDatabase.getInstance().getReference().child("drivers")
                 .child(FirebaseAuth.getInstance().getUid())
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getValue() != null) {
@@ -322,7 +321,10 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
                             imgProfile = navHeader.findViewById(R.id.profile_image);
                             txtName.setText(driver.getName());
                             imgProfile.setImageURI(driver.getImg());
+                            startService(new Intent(getApplicationContext(), AcceptOrderIntentService.class));
+
                         }
+
                     }
 
                     @Override
@@ -461,6 +463,8 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
             timer.cancel();
             timer = null;
         }
+
+
     }
 
     boolean changed = false;
@@ -545,24 +549,24 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
         if (distancePoly2 != null)
             distancePoly2.remove();
 
-        DatabaseReference ref = FirebaseDatabase.getInstance()
-                .getReference().child("drivers_location");
-        GeoFire geoFire = new GeoFire(ref);
-        geoFire.removeLocation(FirebaseAuth.getInstance().getUid(), new GeoFire.CompletionListener() {
+        FirebaseDatabase.getInstance()
+                .getReference().child("drivers_location").child(FirebaseAuth.getInstance().getUid()).removeValue()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void onComplete(String key, DatabaseError error) {
+            public void onComplete(@NonNull Task<Void> task) {
                 FirebaseDatabase.getInstance().getReference().child("drivers_current_order")
                         .child(FirebaseAuth.getInstance().getUid()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-
+                            Log.d(TAG, "onComplete: distroy");
                         }
 
                     }
                 });
             }
         });
+
 
     }
 

@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -21,7 +22,9 @@ import com.bumptech.glide.request.transition.Transition;
 import com.fekrah.driver.activities.ChatsRoomsActivity;
 import com.fekrah.driver.activities.CurrentOrderActivity;
 import com.fekrah.driver.activities.MainActivity;
+import com.fekrah.driver.models.Room;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -57,6 +60,58 @@ public class AcceptOrderIntentService extends IntentService {
 
                     }
                 });
+
+        FirebaseDatabase.getInstance().getReference().child("rooms")
+                .child(FirebaseAuth.getInstance().getUid()).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if (dataSnapshot.getValue() != null) {
+
+                    FirebaseDatabase.getInstance().getReference().child("rooms")
+                            .child(FirebaseAuth.getInstance().getUid()).child(dataSnapshot.getKey())
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    Room room = dataSnapshot.getValue(Room.class);
+                                    if (room != null) {
+                                        if (room.getFrom() != null) {
+                                            if (!room.getFrom().equals("me"))
+                                                createNotifyAccept(room.getReceiver_name(), room.getImg(), room.getLast_message(), "messages", 125);
+
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
+
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public void createNotifyAccept(final String name, String img, final String content, final String id, final int id2) {
@@ -104,7 +159,7 @@ public class AcceptOrderIntentService extends IntentService {
                         .setAutoCancel(true)
                         .setVibrate(new long[]{1000, 100, 1000, 100})
                         .setAutoCancel(true)
-                        .setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.new_order))
+                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                         .setPriority(NotificationCompat.PRIORITY_HIGH);
 
                 NotificationManagerCompat notificationManager = NotificationManagerCompat.from(AcceptOrderIntentService.this);

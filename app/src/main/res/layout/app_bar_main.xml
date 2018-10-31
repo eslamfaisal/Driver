@@ -164,15 +164,18 @@
             android:layout_below="@id/pick_locations"
             tools:context=".activities.MainActivity" />
 
+
         <ImageView
             android:visibility="gone"
             android:id="@+id/go_map"
+            android:layout_width="50dp"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="16dp"
+            android:layout_height="50dp"
             android:layout_marginBottom="70dp"
-            android:src="@drawable/ic_google_map"
-            android:layout_width="45dp"
-            android:layout_height="45dp" />
+            android:background="@drawable/ic_edit_text_background_shape"
+            android:padding="8dp"
+            android:src="@drawable/ic_near_places_icon" />
     </RelativeLayout>
 
     <LinearLayout
