@@ -6,20 +6,22 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
-
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.support.annotation.CallSuper;
@@ -39,10 +41,8 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,14 +51,12 @@ import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
-
 import android.view.inputmethod.InputMethodManager;
-
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
+import android.widget.Toast;
 
 import com.akexorcist.googledirection.DirectionCallback;
 import com.akexorcist.googledirection.GoogleDirection;
@@ -72,17 +70,14 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.fekrah.driver.AcceptOrderIntentService;
+import com.fekrah.driver.DissconnectService;
 import com.fekrah.driver.FloatingService;
 import com.fekrah.driver.R;
 import com.fekrah.driver.SamplePresenter;
-
 import com.fekrah.driver.fragments.TalabatFragment;
-
 import com.fekrah.driver.helper.CalculateDistanceTime;
 import com.fekrah.driver.models.Driver;
 import com.fekrah.driver.models.Order;
-
-
 import com.fekrah.driver.models.User;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -92,7 +87,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
-
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
@@ -110,7 +104,6 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -219,9 +212,10 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
 
     private boolean logout = false;
     private boolean onActivit = false;
-    public static  User user;
+    public static User user;
 
     public static boolean accepted = false;
+
     public static boolean isOrderSent() {
         return orderSent;
     }
@@ -230,20 +224,18 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
         MainActivity.orderSent = orderSent;
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-        samplePresenter = new SamplePresenter(this);
+    BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean noConnectivity = intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
 
-        initializeMainView();
-
-        displayOverAppsAndConnectToClient();
-
-        getDriverInfo();
-
-    }
+            if (!noConnectivity) {
+                onConnectionFound();
+            } else {
+                onConnectionLost();
+            }
+        }
+    };
 
     private void displayOverAppsAndConnectToClient() {
         final Dialog dialog = new Dialog(this, getString(R.string.permission), getString(R.string.display_over_apps));
@@ -308,31 +300,238 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
     }
 
-    private void getDriverInfo() {
-        FirebaseDatabase.getInstance().getReference().child("drivers")
-                .child(FirebaseAuth.getInstance().getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.getValue() != null) {
-                            driver = dataSnapshot.getValue(Driver.class);
-                            navHeader = navigationView.getHeaderView(0);
-                            txtName = (TextView) navHeader.findViewById(R.id.usernameTxt);
-                            imgProfile = navHeader.findViewById(R.id.profile_image);
-                            txtName.setText(driver.getName());
-                            imgProfile.setImageURI(driver.getImg());
-                            startService(new Intent(getApplicationContext(), AcceptOrderIntentService.class));
+    ValueEventListener orderListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            if (dataSnapshot.getValue() != null) {
+                final Order order = dataSnapshot.getValue(Order.class);
+                if (order != null) {
 
+                    Log.d("aaaaaa", "onDataChange: " + order.getArrival_location());
+
+                    final LatLng arrivalLatLng = new LatLng(order.getA_l_lat(), order.getA_l_lng());
+                    final LatLng receiverLatLng = new LatLng(order.getR_l_lat(), order.getR_l_lng());
+                    final LatLng myLocationLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    receiverLocationMarkerOption = new MarkerOptions()
+                            .position(receiverLatLng)
+                            .icon(bitmapDescriptorFromVector(MainActivity.this, R.drawable.ic_house_marker))
+                            .title(getString(R.string.receiver_place) + " : " + order.getReceiver_location());
+
+                    arrivalLocationMarkerOption = new MarkerOptions()
+                            .position(arrivalLatLng)
+                            .icon(bitmapDescriptorFromVector(MainActivity.this, R.drawable.ic_shop_marker))
+                            .title(getString(R.string.arrival_area) + " : " + order.getArrival_location());
+
+                    receiverLocationMarker = mMap.addMarker(receiverLocationMarkerOption);
+                    arrivalLocationMarker = mMap.addMarker(arrivalLocationMarkerOption);
+
+                    GoogleDirection.withServerKey(serverKey)
+                            .from(myLocationLatLng)
+                            .to(arrivalLatLng)
+                            .transportMode(TransportMode.DRIVING)
+                            .alternativeRoute(true)
+                            .execute(new DirectionCallback() {
+                                @Override
+                                public void onDirectionSuccess(Direction direction, String rawBody) {
+
+                                    Route route = direction.getRouteList().get(0);
+
+                                    ArrayList<LatLng> directionPositionList = route.getLegList().get(0).getDirectionPoint();
+                                    distancePoly = mMap.addPolyline(DirectionConverter.createPolyline(MainActivity.this, directionPositionList, 5, getResources().getColor(R.color.colorPrimary)));
+                                    // setCameraWithCoordinationBounds(route);
+                                    GoogleDirection.withServerKey(serverKey)
+                                            .from(arrivalLatLng)
+                                            .to(receiverLocationMarker.getPosition())
+                                            .transportMode(TransportMode.DRIVING)
+                                            .alternativeRoute(true)
+                                            .execute(new DirectionCallback() {
+                                                @Override
+                                                public void onDirectionSuccess(Direction direction, String rawBody) {
+
+                                                    Route route = direction.getRouteList().get(0);
+
+                                                    ArrayList<LatLng> directionPositionList = route.getLegList().get(0).getDirectionPoint();
+                                                    distancePoly2 = mMap.addPolyline(DirectionConverter.createPolyline(MainActivity.this, directionPositionList, 5, getResources().getColor(R.color.colorPrimary)));
+                                                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                                                    builder.include(arrivalLatLng);
+                                                    builder.include(receiverLatLng);
+                                                    builder.include(myLocationLatLng);
+
+                                                    LatLngBounds bounds = builder.build();
+                                                    int padding = 0; // offset from edges of the map in pixels
+                                                    CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 100);
+                                                    mMap.animateCamera(cu);
+
+
+                                                }
+
+                                                @Override
+                                                public void onDirectionFailure(Throwable t) {
+
+                                                }
+                                            });
+
+                                }
+
+                                @Override
+                                public void onDirectionFailure(Throwable t) {
+
+                                }
+                            });
+
+                    CalculateDistanceTime distance_task = new CalculateDistanceTime(MainActivity.this);
+
+                    distance_task.getDirectionsUrl(new LatLng(arrivalLatLng.latitude, arrivalLatLng.longitude),
+                            new LatLng(myLocationLatLng.latitude, myLocationLatLng.longitude), "AIzaSyAnKvay92-zyf4Or37UL6tsEF7BL8PiC6U");
+
+                    distance_task.setLoadListener(new CalculateDistanceTime.taskCompleteListener() {
+                        @Override
+                        public void taskCompleted(String[] time_distance) {
+//                approximate_time.setText("" + time_distance[1]);
+//                approximate_diatance.setText("" + time_distance[0]);
+//                results[0]= Float.parseFloat(time_distance[1]);
+                            results[0] = time_distance[0];
+                            results[1] = time_distance[1];
                         }
 
-                    }
+                    });
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//                    Location.distanceBetween(arrivalLatLng.latitude, arrivalLatLng.longitude,
+//                            myLocationLatLng.latitude, myLocationLatLng.longitude, results);
 
-                    }
-                });
-    }
+                    talabatFragment.change(order);
+
+                    receiverLat = receiverLatLng.latitude;
+                    receiverLng = receiverLatLng.longitude;
+
+                    arrivalLat = order.getA_l_lat();
+                    arrivalLng = order.getA_l_lng();
+
+
+                    goMap.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            if (Build.VERSION.SDK_INT >= 23) {
+                                /** check if we already  have permission to draw over other apps */
+                                if (!Settings.canDrawOverlays(MainActivity.this)) { // WHAT IF THIS EVALUATES TO FALSE.
+                                    /** if not construct intent to request permission */
+                                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                            Uri.parse("package:" + getPackageName()));
+                                    /** request permission via start activity for result */
+                                    startActivityForResult(intent, MY_PERMISSION);
+                                } else { // ADD THIS.
+
+                                    launchGoogleMap(recieverLocationAdress,
+                                            receiverLat, receiverLng, arrivalLat, arrivalLng);
+                                    //launchGoogleMap();
+                                }
+
+                            } else { // ADD THIS.
+                                launchGoogleMap(recieverLocationAdress,
+                                        receiverLat, receiverLng, arrivalLat, arrivalLng);
+                                //launchGoogleMap();
+
+                            }
+
+
+                        }
+                    });
+                    FirebaseDatabase.getInstance().getReference()
+                            .child("users").child(order.getUser_key())
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.getValue() != null) {
+                                        user = dataSnapshot.getValue(User.class);
+                                        if (user != null) {
+
+                                            goMap.setVisibility(View.VISIBLE);
+                                            mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                                            c = 0;
+                                            animation = new AlphaAnimation(1, 0); // Change alpha from fully visible to invisible
+                                            animation.setDuration(500); // duration - half a second
+                                            animation.setInterpolator(new LinearInterpolator()); // do not alter animation rate
+                                            animation.setRepeatCount(Animation.INFINITE); // Repeat animation infinitely
+                                            animation.setRepeatMode(Animation.REVERSE); // Reverse animation at the end so the button will fade back in
+                                            orderStateText.startAnimation(animation);
+                                            orderStateText.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(final View view) {
+                                                    orderStateText.clearAnimation();
+                                                }
+                                            });
+                                            counter();
+                                            mCountDownTimer.start();
+                                            setOrderSent(false);
+                                            mProgressBar.setVisibility(View.VISIBLE);
+                                            notificationContent(order.getDetails(), order.getArrival_location(), order.getReceiver_location());
+                                            createNotify(user.getName(), user.getImg(), notificationContent(order.getDetails(), order.getArrival_location(), order.getReceiver_location()), "orders", 125);
+                                        }
+
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                }
+                orderStateText.setText(getString(R.string.new_order));
+            } else {
+                if (polyline1 != null)
+                    polyline1.remove();
+                if (polyline2 != null)
+                    polyline2.remove();
+                if (arrivalLocationMarker != null)
+                    arrivalLocationMarker.remove();
+                if (receiverLocationMarker != null)
+                    receiverLocationMarker.remove();
+                if (distancePoly != null)
+                    distancePoly.remove();
+                if (distancePoly2 != null)
+                    distancePoly2.remove();
+
+                orderStateText.setText(getString(R.string.no_orders_yet));
+
+                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                goMap.setVisibility(View.GONE);
+                CameraPosition SENDBIS = CameraPosition.builder()
+                        .target(new LatLng(location.getLatitude(), location.getLongitude()))
+                        .zoom(17)
+                        .build();
+
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(SENDBIS), 5000, null);
+
+
+                FirebaseDatabase.getInstance().getReference().child("drivers")
+                        .child(FirebaseAuth.getInstance().getUid()).child("available_balance")
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.getValue() != null) {
+                                    String balance = dataSnapshot.getValue().toString();
+                                    if (Integer.parseInt(balance) < 3) {
+                                        materialAnimatedSwitch.toggle();
+                                        Toast.makeText(MainActivity.this, R.string.charge_balance, Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+        }
+    };
 
     private void fetchOrder() {
         orderRef = FirebaseDatabase.getInstance().getReference().child("drivers_current_order")
@@ -441,8 +640,19 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
     }
 
     @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        getLocation();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+        samplePresenter = new SamplePresenter(this);
+        removeLocation();
+
+        initializeMainView();
+
+        displayOverAppsAndConnectToClient();
+
+        getDriverInfo();
+
     }
 
     @Override
@@ -450,9 +660,47 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
 
     }
 
+    private void getDriverInfo() {
+        FirebaseDatabase.getInstance().getReference().child("drivers")
+                .child(FirebaseAuth.getInstance().getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getValue() != null) {
+                            driver = dataSnapshot.getValue(Driver.class);
+                            navHeader = navigationView.getHeaderView(0);
+                            txtName = (TextView) navHeader.findViewById(R.id.usernameTxt);
+                            imgProfile = navHeader.findViewById(R.id.profile_image);
+                            txtName.setText(driver.getName());
+                            imgProfile.setImageURI(driver.getImg());
+                            startService(new Intent(getApplicationContext(), AcceptOrderIntentService.class));
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        startService(new Intent(getApplicationContext(), DissconnectService.class));
+        getLocation();
+    }
+
     @Override
     protected void onDestroy() {
+
         super.onDestroy();
+        FirebaseDatabase.getInstance().goOffline();
+        unregisterReceiver(networkStateReceiver);
+
         if (samplePresenter != null)
             samplePresenter.destroy();
 
@@ -466,6 +714,36 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
 
 
     }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    private void registerBroadCastReceiver() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkStateReceiver, filter);
+
+//        if (isNetworkAvailable()) {
+//            Log.d("adadad", "onConnectionLost: co");
+//
+//            FirebaseDatabase.getInstance().goOnline();
+//        } else {
+//
+//            Log.d(TAG, "onConnectionLost: dis");
+//            FirebaseDatabase.getInstance().goOffline();
+//
+//
+//        }
+    }
+
+    public void onConnectionLost() {
+        Log.d("adadad", "onConnectionLost: dis");
+        FirebaseDatabase.getInstance().goOffline();
+    }
+
 
     boolean changed = false;
 
@@ -543,31 +821,10 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
                 });
     }
 
-    private void removeLocation() {
-        if (distancePoly != null)
-            distancePoly.remove();
-        if (distancePoly2 != null)
-            distancePoly2.remove();
+    public void onConnectionFound() {
+        Log.d("adadad", "onConnectionLost: co");
 
-        FirebaseDatabase.getInstance()
-                .getReference().child("drivers_location").child(FirebaseAuth.getInstance().getUid()).removeValue()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                FirebaseDatabase.getInstance().getReference().child("drivers_current_order")
-                        .child(FirebaseAuth.getInstance().getUid()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "onComplete: distroy");
-                        }
-
-                    }
-                });
-            }
-        });
-
-
+        FirebaseDatabase.getInstance().goOnline();
     }
 
     public class MyTimerTask extends TimerTask {
@@ -614,7 +871,6 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
             timer = null;
         }
         dismissProgress();
-
     }
 
     private void displayProgress() {
@@ -767,129 +1023,32 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
         }
     }
 
+    private void removeLocation() {
+        if (distancePoly != null)
+            distancePoly.remove();
+        if (distancePoly2 != null)
+            distancePoly2.remove();
 
-    private void init(LatLng latLng) {
-
-
-        goMap.setVisibility(View.GONE);
-        //mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-        mLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
-
-            @Override
-            public void onPanelSlide(View panel, float slideOffset) {
-                Log.i(TAG, "onPanelSlide, offset " + slideOffset);
-            }
-
-            @Override
-            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
-                Log.i(TAG, "onPanelStateChanged " + newState);
-                // setDistance(results[0]);
-                if (newState.equals("EXPANDED")) {
-                    mainPanel.setVisibility(View.GONE);
-                } else {
-                    mainPanel.setVisibility(View.VISIBLE);
-                }
-
-                if (c == 2) {
-                    if (animation != null) {
-                        orderStateText.clearAnimation();
-                    }
-                } else {
-                    c += 1;
-                }
-            }
-        });
-
-        mLayout.setFadeOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-            }
-        });
-
-
-        driverstateText = view.findViewById(R.id.driver_state_text);
-        materialAnimatedSwitch = view.findViewById(R.id.driver_state);
-
-        materialAnimatedSwitch.setOnCheckedChangeListener(
-                new MaterialAnimatedSwitch.OnCheckedChangeListener() {
+        FirebaseDatabase.getInstance()
+                .getReference().child("drivers_location").child(FirebaseAuth.getInstance().getUid()).removeValue()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onCheckedChanged(boolean isChecked) {
-                        if (isChecked) {
-                            driverstateText.setText(R.string.online);
-                            driverstateText.setTextColor(Color.GREEN);
-                            moveCameraCurrentLocation(new LatLng(location.getLatitude(), location.getLongitude()), "My location");
-                            if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                return;
-                            }
-                            mMap.setMyLocationEnabled(false);
-                            setDriverLocation();
-                            online = true;
-
-                        } else {
-                            if (mCountDownTimer != null) {
-                                mCountDownTimer.cancel();
-                                mCountDownTimer.onFinish();
-                            }
-                            driverstateText.setTextColor(Color.RED);
-                            driverstateText.setText(getString(R.string.offline));
-                            if (currentLocationMarker != null)
-                                currentLocationMarker.remove();
-                            mMap.setMyLocationEnabled(true);
-
-                            mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                            removeLocation();
-                            online = false;
-
-                        }
-                    }
-                });
-
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.container, talabatFragment);
-        ft.commit();
-
-        fetchOrder();
-
-        arrival_place_v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-
-                try {
-                    startActivityForResult(builder.build(MainActivity.this), PLACE_PICKER_REQUEST);
-                } catch (GooglePlayServicesRepairableException e) {
-                    Log.e(TAG, "onClick: GooglePlayServicesRepairableException: " + e.getMessage());
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    Log.e(TAG, "onClick: GooglePlayServicesNotAvailableException: " + e.getMessage());
-                }
-            }
-
-        });
-
-        FirebaseDatabase.getInstance().getReference().child("drivers_current_order")
-                .child(FirebaseAuth.getInstance().getUid()).child("offer")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.getValue() != null) {
-                            if (dataSnapshot.getValue().equals("sent")) {
-                                if (mProgressBar != null) {
-                                    setOrderSent(true);
-                                    mProgressBar.setVisibility(View.GONE);
-                                    mCountDownTimer.onFinish();
+                    public void onComplete(@NonNull Task<Void> task) {
+                        FirebaseDatabase.getInstance().getReference().child("drivers_current_order")
+                                .child(FirebaseAuth.getInstance().getUid()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "onComplete: distroy");
                                 }
+
                             }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                        });
                     }
                 });
-    }
 
+
+    }
 
 
     private void counter() {
@@ -965,6 +1124,150 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
         locationManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+    private void init(LatLng latLng) {
+
+
+        goMap.setVisibility(View.GONE);
+        //mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+        mLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+                Log.i(TAG, "onPanelSlide, offset " + slideOffset);
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+                Log.i(TAG, "onPanelStateChanged " + newState);
+                // setDistance(results[0]);
+                if (newState.equals("EXPANDED")) {
+                    mainPanel.setVisibility(View.GONE);
+                } else {
+                    mainPanel.setVisibility(View.VISIBLE);
+                }
+
+                if (c == 2) {
+                    if (animation != null) {
+                        orderStateText.clearAnimation();
+                    }
+                } else {
+                    c += 1;
+                }
+            }
+        });
+
+        mLayout.setFadeOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }
+        });
+
+
+        driverstateText = view.findViewById(R.id.driver_state_text);
+        materialAnimatedSwitch = view.findViewById(R.id.driver_state);
+
+        materialAnimatedSwitch.setOnCheckedChangeListener(
+                new MaterialAnimatedSwitch.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(boolean isChecked) {
+                        if (isChecked) {
+
+                            FirebaseDatabase.getInstance().getReference().child("drivers")
+                                    .child(FirebaseAuth.getInstance().getUid()).child("available_balance")
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.getValue() != null) {
+                                                String balance = dataSnapshot.getValue().toString();
+                                                if (Integer.parseInt(balance) >= 3) {
+                                                    driverstateText.setText(R.string.online);
+                                                    driverstateText.setTextColor(Color.GREEN);
+                                                    moveCameraCurrentLocation(new LatLng(location.getLatitude(), location.getLongitude()), "My location");
+                                                    if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                                        return;
+                                                    }
+                                                    mMap.setMyLocationEnabled(false);
+                                                    setDriverLocation();
+                                                    online = true;
+                                                } else {
+                                                    materialAnimatedSwitch.toggle();
+                                                    Toast.makeText(MainActivity.this, R.string.charge_balance, Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+
+                        } else {
+                            if (mCountDownTimer != null) {
+                                mCountDownTimer.cancel();
+                                mCountDownTimer.onFinish();
+                            }
+                            driverstateText.setTextColor(Color.RED);
+                            driverstateText.setText(getString(R.string.offline));
+                            if (currentLocationMarker != null)
+                                currentLocationMarker.remove();
+                            mMap.setMyLocationEnabled(true);
+
+                            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                            removeLocation();
+                            online = false;
+
+                        }
+                    }
+                });
+
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.container, talabatFragment);
+        ft.commit();
+
+        fetchOrder();
+
+        arrival_place_v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+
+                try {
+                    startActivityForResult(builder.build(MainActivity.this), PLACE_PICKER_REQUEST);
+                } catch (GooglePlayServicesRepairableException e) {
+                    Log.e(TAG, "onClick: GooglePlayServicesRepairableException: " + e.getMessage());
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    Log.e(TAG, "onClick: GooglePlayServicesNotAvailableException: " + e.getMessage());
+                }
+            }
+
+        });
+
+        FirebaseDatabase.getInstance().getReference().child("drivers_current_order")
+                .child(FirebaseAuth.getInstance().getUid()).child("offer")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getValue() != null) {
+                            if (dataSnapshot.getValue().equals("sent")) {
+                                if (mProgressBar != null) {
+                                    setOrderSent(true);
+                                    mProgressBar.setVisibility(View.GONE);
+                                    mCountDownTimer.onFinish();
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+    }
 
     @Override
     public void onBackPressed() {
@@ -981,7 +1284,8 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
                 mCountDownTimer.cancel();
                 mCountDownTimer = null;
             }
-            orderRef.removeEventListener(orderListener);
+            if (orderListener != null)
+                orderRef.removeEventListener(orderListener);
             finish();
         }
     }
@@ -1026,6 +1330,8 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
             });
 
 
+        } else if (id == R.id.nave_balance) {
+            startActivity(new Intent(this, BalanceActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -1033,244 +1339,31 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
         return true;
     }
 
-    ValueEventListener orderListener = new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            if (dataSnapshot.getValue() != null) {
-                final Order order = dataSnapshot.getValue(Order.class);
-                if (order != null) {
-
-                    Log.d("aaaaaa", "onDataChange: " + order.getArrival_location());
-
-                    final LatLng arrivalLatLng = new LatLng(order.getA_l_lat(), order.getA_l_lng());
-                    final LatLng receiverLatLng = new LatLng(order.getR_l_lat(), order.getR_l_lng());
-                    final LatLng myLocationLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    receiverLocationMarkerOption = new MarkerOptions()
-                            .position(receiverLatLng)
-                            .icon(bitmapDescriptorFromVector(MainActivity.this ,R.drawable.ic_house_marker))
-                            .title(getString(R.string.receiver_place) + " : " + order.getReceiver_location());
-
-                    arrivalLocationMarkerOption = new MarkerOptions()
-                            .position(arrivalLatLng)
-                            .icon(bitmapDescriptorFromVector(MainActivity.this ,R.drawable.ic_shop_marker))
-                            .title(getString(R.string.arrival_area) + " : " + order.getArrival_location());
-
-                    receiverLocationMarker = mMap.addMarker(receiverLocationMarkerOption);
-                    arrivalLocationMarker = mMap.addMarker(arrivalLocationMarkerOption);
-
-                    GoogleDirection.withServerKey(serverKey)
-                            .from(myLocationLatLng)
-                            .to(arrivalLatLng)
-                            .transportMode(TransportMode.DRIVING)
-                            .alternativeRoute(true)
-                            .execute(new DirectionCallback() {
-                                @Override
-                                public void onDirectionSuccess(Direction direction, String rawBody) {
-
-                                    Route route = direction.getRouteList().get(0);
-
-                                    ArrayList<LatLng> directionPositionList = route.getLegList().get(0).getDirectionPoint();
-                                    distancePoly = mMap.addPolyline(DirectionConverter.createPolyline(MainActivity.this, directionPositionList, 5, getResources().getColor(R.color.colorPrimary)));
-                                    // setCameraWithCoordinationBounds(route);
-                                    GoogleDirection.withServerKey(serverKey)
-                                            .from(arrivalLatLng)
-                                            .to(receiverLocationMarker.getPosition())
-                                            .transportMode(TransportMode.DRIVING)
-                                            .alternativeRoute(true)
-                                            .execute(new DirectionCallback() {
-                                                @Override
-                                                public void onDirectionSuccess(Direction direction, String rawBody) {
-
-                                                    Route route = direction.getRouteList().get(0);
-
-                                                    ArrayList<LatLng> directionPositionList = route.getLegList().get(0).getDirectionPoint();
-                                                    distancePoly2 = mMap.addPolyline(DirectionConverter.createPolyline(MainActivity.this, directionPositionList, 5, getResources().getColor(R.color.colorPrimary)));
-                                                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                                                    builder.include(arrivalLatLng);
-                                                    builder.include(receiverLatLng);
-                                                    builder.include(myLocationLatLng);
-
-                                                    LatLngBounds bounds = builder.build();
-                                                    int padding = 0; // offset from edges of the map in pixels
-                                                    CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 100);
-                                                    mMap.animateCamera(cu);
-
-
-                                                }
-
-                                                @Override
-                                                public void onDirectionFailure(Throwable t) {
-
-                                                }
-                                            });
-
-                                }
-
-                                @Override
-                                public void onDirectionFailure(Throwable t) {
-
-                                }
-                            });
-
-                    CalculateDistanceTime distance_task = new CalculateDistanceTime(MainActivity.this);
-
-                    distance_task.getDirectionsUrl(new LatLng(arrivalLatLng.latitude, arrivalLatLng.longitude),
-                            new LatLng(myLocationLatLng.latitude, myLocationLatLng.longitude), "AIzaSyAnKvay92-zyf4Or37UL6tsEF7BL8PiC6U");
-
-                    distance_task.setLoadListener(new CalculateDistanceTime.taskCompleteListener() {
-                        @Override
-                        public void taskCompleted(String[] time_distance) {
-//                approximate_time.setText("" + time_distance[1]);
-//                approximate_diatance.setText("" + time_distance[0]);
-//                results[0]= Float.parseFloat(time_distance[1]);
-                        results[0] = time_distance[0];
-                        results[1] = time_distance[1];
-                        }
-
-                    });
-
-//                    Location.distanceBetween(arrivalLatLng.latitude, arrivalLatLng.longitude,
-//                            myLocationLatLng.latitude, myLocationLatLng.longitude, results);
-
-                    talabatFragment.change(order);
-
-                    receiverLat = receiverLatLng.latitude;
-                    receiverLng = receiverLatLng.longitude;
-
-                    arrivalLat = order.getA_l_lat();
-                    arrivalLng = order.getA_l_lng();
-
-
-                    goMap.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                            if (Build.VERSION.SDK_INT >= 23) {
-                                /** check if we already  have permission to draw over other apps */
-                                if (!Settings.canDrawOverlays(MainActivity.this)) { // WHAT IF THIS EVALUATES TO FALSE.
-                                    /** if not construct intent to request permission */
-                                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                                            Uri.parse("package:" + getPackageName()));
-                                    /** request permission via start activity for result */
-                                    startActivityForResult(intent, MY_PERMISSION);
-                                } else { // ADD THIS.
-
-                                    launchGoogleMap(recieverLocationAdress,
-                                            receiverLat, receiverLng, arrivalLat, arrivalLng);
-                                    //launchGoogleMap();
-                                }
-
-                            } else { // ADD THIS.
-                                launchGoogleMap(recieverLocationAdress,
-                                        receiverLat, receiverLng, arrivalLat, arrivalLng);
-                                //launchGoogleMap();
-
-                            }
-
-
-                        }
-                    });
-                    FirebaseDatabase.getInstance().getReference()
-                            .child("users").child(order.getUser_key())
-                            .addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    if (dataSnapshot.getValue() != null) {
-                                        user = dataSnapshot.getValue(User.class);
-                                        if (user != null) {
-
-                                            goMap.setVisibility(View.VISIBLE);
-                                            mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                                            c = 0;
-                                            animation = new AlphaAnimation(1, 0); // Change alpha from fully visible to invisible
-                                            animation.setDuration(500); // duration - half a second
-                                            animation.setInterpolator(new LinearInterpolator()); // do not alter animation rate
-                                            animation.setRepeatCount(Animation.INFINITE); // Repeat animation infinitely
-                                            animation.setRepeatMode(Animation.REVERSE); // Reverse animation at the end so the button will fade back in
-                                            orderStateText.startAnimation(animation);
-                                            orderStateText.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(final View view) {
-                                                    orderStateText.clearAnimation();
-                                                }
-                                            });
-                                            counter();
-                                            mCountDownTimer.start();
-                                            setOrderSent(false);
-                                            mProgressBar.setVisibility(View.VISIBLE);
-                                            notificationContent(order.getDetails(), order.getArrival_location(), order.getReceiver_location());
-                                            createNotify(user.getName(), user.getImg(), notificationContent(order.getDetails(), order.getArrival_location(), order.getReceiver_location()), "orders", 125);
-                                        }
-
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
-                }
-                orderStateText.setText(getString(R.string.new_order));
-            } else {
-                if (polyline1 != null)
-                    polyline1.remove();
-                if (polyline2 != null)
-                    polyline2.remove();
-                if (arrivalLocationMarker != null)
-                    arrivalLocationMarker.remove();
-                if (receiverLocationMarker != null)
-                    receiverLocationMarker.remove();
-                if (distancePoly != null)
-                    distancePoly.remove();
-                if (distancePoly2 != null)
-                    distancePoly2.remove();
-
-                orderStateText.setText(getString(R.string.no_orders_yet));
-
-                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-                goMap.setVisibility(View.GONE);
-                CameraPosition SENDBIS = CameraPosition.builder()
-                        .target(new LatLng(location.getLatitude(), location.getLongitude()))
-                        .zoom(17)
-                        .build();
-
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(SENDBIS), 5000, null);
-            }
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-        }
-    };
-
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, @DrawableRes int vectorDrawableResourceId) {
         Drawable background = ContextCompat.getDrawable(context, vectorDrawableResourceId);
         background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());
         // Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId);
         //vectorDrawable.setBounds(40, 20, vectorDrawable.getIntrinsicWidth() + 40, vectorDrawable.getIntrinsicHeight() + 20);
-        Bitmap bitmap = Bitmap.createBitmap(background.getIntrinsicWidth()+20, background.getIntrinsicHeight()+20, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(background.getIntrinsicWidth() + 20, background.getIntrinsicHeight() + 20, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         background.draw(canvas);
         //vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-    private void NotifyAccept(){
+    private void NotifyAccept() {
         FirebaseDatabase.getInstance().getReference().child("drivers_current_order")
                 .child(FirebaseAuth.getInstance().getUid()).child("offer")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.getValue()!=null){
-                            if (dataSnapshot.getValue().toString().equals("accept")){
-                                if (!accepted){
-                                    accepted=true;
-                                    createNotifyAccept(user.getName(),user.getImg(),getString(R.string.accept_offer),"accept_order",124);
+                        if (dataSnapshot.getValue() != null) {
+                            if (dataSnapshot.getValue().toString().equals("accept")) {
+                                if (!accepted) {
+                                    accepted = true;
+                                    createNotifyAccept(user.getName(), user.getImg(), getString(R.string.accept_offer), "accept_order", 124);
                                 }
                             }
-
 
                         }
                     }
@@ -1281,6 +1374,7 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
                     }
                 });
     }
+
     public void createNotifyAccept(final String name, String img, final String content, final String id, final int id2) {
 
         Intent notifyIntent = new Intent(this, ChatsRoomsActivity.class);
@@ -1326,7 +1420,7 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
                         .setAutoCancel(true)
                         .setVibrate(new long[]{1000, 100, 1000, 100})
                         .setAutoCancel(true)
-                        .setSound(Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.new_order))
+                        .setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.new_order))
                         .setPriority(NotificationCompat.PRIORITY_HIGH);
 
                 NotificationManagerCompat notificationManager = NotificationManagerCompat.from(MainActivity.this);
@@ -1348,5 +1442,6 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
         });
 
     }
+
 
 }

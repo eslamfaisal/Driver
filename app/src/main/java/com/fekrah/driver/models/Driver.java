@@ -21,6 +21,8 @@ public class Driver implements Serializable {
     private String  car_id;
     private int rating_count;
     private float rating;
+    private int available_balance;
+    private int taken_balance;
 
     public Driver() {
     }
@@ -49,6 +51,44 @@ public class Driver implements Serializable {
         this.car_id = car_id;
         this.rating_count = rating_count;
         this.rating = rating;
+    }
+
+    public Driver(String name, String email, String img, String mobile, String device_token, String user_key, String city, String car_color, String car_model, String car_form_img, String car_license_img, String car_front_img, String car_back_img, String national_id, String car_id, int rating_count, float rating, int available_balance, int taken_balance) {
+        this.name = name;
+        this.email = email;
+        this.img = img;
+        this.mobile = mobile;
+        this.device_token = device_token;
+        this.user_key = user_key;
+        this.city = city;
+        this.car_color = car_color;
+        this.car_model = car_model;
+        this.car_form_img = car_form_img;
+        this.car_license_img = car_license_img;
+        this.car_front_img = car_front_img;
+        this.car_back_img = car_back_img;
+        this.national_id = national_id;
+        this.car_id = car_id;
+        this.rating_count = rating_count;
+        this.rating = rating;
+        this.available_balance = available_balance;
+        this.taken_balance = taken_balance;
+    }
+
+    public int getAvailable_balance() {
+        return available_balance;
+    }
+
+    public void setAvailable_balance(int available_balance) {
+        this.available_balance = available_balance;
+    }
+
+    public int getTaken_balance() {
+        return taken_balance;
+    }
+
+    public void setTaken_balance(int taken_balance) {
+        this.taken_balance = taken_balance;
     }
 
     public String getName() {

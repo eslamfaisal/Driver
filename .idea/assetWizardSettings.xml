@@ -14,8 +14,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_house_marker" />
-                            <entry key="sourceFile" value="D:\ic_house_marker.svg" />
+                            <entry key="outputName" value="ic_balance" />
+                            <entry key="sourceFile" value="D:\balance.svg" />
                           </map>
                         </option>
                       </PersistentState>

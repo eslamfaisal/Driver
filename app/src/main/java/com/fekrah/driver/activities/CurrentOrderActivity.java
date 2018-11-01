@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,31 +15,21 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.fekrah.driver.R;
-import com.fekrah.driver.adapters.AcceptedOrderDriversAdapter;
-import com.fekrah.driver.fragments.TalabatFragment;
 import com.fekrah.driver.models.Driver;
-import com.fekrah.driver.models.Offer;
 import com.fekrah.driver.models.Order;
 import com.fekrah.driver.models.OrderResponse;
-import com.fekrah.driver.models.State;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,14 +39,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rafakob.drawme.DrawMeButton;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.fekrah.driver.activities.MainActivity.isOrderSent;
-import static com.fekrah.driver.activities.MainActivity.orderSent;
 import static com.fekrah.driver.activities.MainActivity.setOrderSent;
 
 public class CurrentOrderActivity extends BaseActivity {
@@ -173,11 +161,8 @@ public class CurrentOrderActivity extends BaseActivity {
                     return;
                 }
 
-//                else if (estimatedTimeEdt.getText().toString().trim().equals("")){
-//                    displaySnackbar(getString(R.string.write_time));
-//                    return;
-//                }
-                //String result = results[0].substring(0, results[0].length() - 2);
+                sendOffer.setEnabled(false);
+
 
                 String key = FirebaseDatabase.getInstance().getReference().push().getKey();
                 final OrderResponse offer = new OrderResponse(
@@ -191,6 +176,7 @@ public class CurrentOrderActivity extends BaseActivity {
                         MainActivity.driver.getRating_count(),
                         MainActivity.driver.getRating()
                 );
+
 
                 FirebaseDatabase.getInstance().getReference().child("Customer_current_order")
                         .child(order.getUser_key()).child("drivers").child(key).setValue(offer)
@@ -207,6 +193,8 @@ public class CurrentOrderActivity extends BaseActivity {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             setOrderSent(true);
                                             showOfferedView();
+                                            sendOffer.setEnabled(true);
+
                                         }
                                     });
 
@@ -226,7 +214,43 @@ public class CurrentOrderActivity extends BaseActivity {
                             if (dataSnapshot.getValue().toString().equals("sent"))
                             showOfferedView();
                             else if (dataSnapshot.getValue().toString().equals("accept")){
-                                showAccepted();
+
+                                FirebaseDatabase.getInstance().getReference().child("drivers")
+                                        .child(FirebaseAuth.getInstance().getUid())
+                                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                if (dataSnapshot.getValue() != null) {
+                                                    Driver driver = dataSnapshot.getValue(Driver.class);
+                                                    if (driver != null) {
+                                                        int currentBalance = driver.getAvailable_balance();
+
+                                                        HashMap<String, Object> updateBalance = new HashMap<>();
+                                                        updateBalance.put("available_balance", currentBalance - 3);
+                                                        updateBalance.put("taken_balance", driver.getTaken_balance() + 3);
+
+                                                        FirebaseDatabase.getInstance().getReference().child("drivers")
+                                                                .child(FirebaseAuth.getInstance().getUid()).updateChildren(updateBalance).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    showAccepted();
+                                                                }
+                                                            }
+                                                        });
+
+                                                    }
+
+
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
+
 //                                Toast.makeText(CurrentOrderActivity.this, ""+MainActivity.accepted, Toast.LENGTH_SHORT).show();
 //                                if (!MainActivity.accepted){
 //                                    MainActivity.accepted=true;

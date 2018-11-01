@@ -153,5 +153,12 @@
     <string name="log_out">Log out</string>
     <string name="bo_driver">لا يوجد سائقين بهذا البريد</string>
     <string name="getting_locations">Getting location...</string>
+    <string name="available_balance">Available balance</string>
+    <string name="recharge">Recharge</string>
+    <string name="enter_your_code">Enter code to recharge</string>
+    <string name="charge_balance">Pleas Recharge your balance</string>
+    <string name="balance">Balance</string>
+    <string name="communicate">Communicate</string>
+    <string name="share_app">share</string>
 
 </resources>

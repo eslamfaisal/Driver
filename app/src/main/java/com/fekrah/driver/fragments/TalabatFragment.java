@@ -1,36 +1,19 @@
 package com.fekrah.driver.fragments;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.fekrah.driver.R;
-import com.fekrah.driver.activities.ChatActivity;
 import com.fekrah.driver.activities.ChatsRoomsActivity;
 import com.fekrah.driver.activities.CurrentOrderActivity;
 import com.fekrah.driver.activities.MainActivity;
@@ -187,6 +170,8 @@ public class TalabatFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() == null) {
+
+
                     hideOrder();
                 } else {
                     if (dataSnapshot.child("offer").getValue() != null) {

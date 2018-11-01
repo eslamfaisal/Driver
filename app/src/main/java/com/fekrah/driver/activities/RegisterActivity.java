@@ -1,21 +1,16 @@
 package com.fekrah.driver.activities;
 
-import android.Manifest;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
-import android.support.annotation.NonNull;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
@@ -23,13 +18,10 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.fekrah.driver.R;
 import com.fekrah.driver.helper.Utility;
 import com.fekrah.driver.models.Driver;
-import com.fekrah.driver.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -44,17 +36,12 @@ import com.yalantis.ucrop.UCrop;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Arrays;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import id.zelory.compressor.Compressor;
-import io.github.inflationx.calligraphy3.CalligraphyConfig;
-import io.github.inflationx.calligraphy3.CalligraphyInterceptor;
-import io.github.inflationx.viewpump.ViewPump;
-import io.github.inflationx.viewpump.ViewPumpContextWrapper;
 
 public class RegisterActivity extends BaseActivity {
 
@@ -397,7 +384,9 @@ public class RegisterActivity extends BaseActivity {
                                                                                                                     national_id.getText().toString(),
                                                                                                                     car_id.getText().toString(),
                                                                                                                     0,
-                                                                                                                    0.0f
+                                                                                                                    0.0f,
+                                                                                                                    5,
+                                                                                                                    0
                                                                                                             );
                                                                                                             FirebaseDatabase.getInstance().getReference().child("drivers")
                                                                                                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())

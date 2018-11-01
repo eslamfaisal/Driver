@@ -5,14 +5,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.model.Image;
@@ -20,11 +18,9 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.fekrah.driver.R;
 import com.fekrah.driver.helper.Utility;
 import com.fekrah.driver.models.Driver;
-import com.google.android.gms.drive.Drive;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -393,7 +389,10 @@ public class EditProfileActivity extends BaseActivity {
                                                                                                 national_id.getText().toString(),
                                                                                                 car_id.getText().toString(),
                                                                                                 driver.getRating_count(),
-                                                                                                driver.getRating()
+                                                                                                driver.getRating(),
+                                                                                                driver.getAvailable_balance(),
+                                                                                                driver.getTaken_balance()
+
                                                                                         );
                                                                                         FirebaseDatabase.getInstance().getReference().child("drivers")
                                                                                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
