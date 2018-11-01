@@ -158,6 +158,10 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
 
     @BindView(R.id.nav_view)
     NavigationView navigationView;
+
+    @BindView(R.id.no_inter)
+    TextView noInter;
+
     //@BindView(R.id.driver_state)
     MaterialAnimatedSwitch materialAnimatedSwitch;
 
@@ -216,6 +220,22 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
 
     public static boolean accepted = false;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+        registerBroadCastReceiver();
+        samplePresenter = new SamplePresenter(this);
+        removeLocation();
+
+        initializeMainView();
+
+        displayOverAppsAndConnectToClient();
+
+        getDriverInfo();
+
+    }
     public static boolean isOrderSent() {
         return orderSent;
     }
@@ -639,21 +659,7 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
                 .build();
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-        samplePresenter = new SamplePresenter(this);
-        removeLocation();
 
-        initializeMainView();
-
-        displayOverAppsAndConnectToClient();
-
-        getDriverInfo();
-
-    }
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -742,6 +748,13 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
     public void onConnectionLost() {
         Log.d("adadad", "onConnectionLost: dis");
         FirebaseDatabase.getInstance().goOffline();
+        noInter.setVisibility(View.VISIBLE);
+    }
+
+    public void onConnectionFound() {
+        Log.d("adadad", "onConnectionLost: co");
+        noInter.setVisibility(View.GONE);
+        FirebaseDatabase.getInstance().goOnline();
     }
 
 
@@ -821,11 +834,7 @@ public class MainActivity extends LocationBaseActivity implements OnMapReadyCall
                 });
     }
 
-    public void onConnectionFound() {
-        Log.d("adadad", "onConnectionLost: co");
 
-        FirebaseDatabase.getInstance().goOnline();
-    }
 
     public class MyTimerTask extends TimerTask {
         @Override

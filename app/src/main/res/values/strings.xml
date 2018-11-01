@@ -185,6 +185,8 @@
 
     <string name="communicate">Communicate</string>
     <string name="share_app">share</string>
+    <string name="register_account">Create account</string>
+    <string name="no_internet_connection">No Internet connection</string>
 
 
 </resources>

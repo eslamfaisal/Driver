@@ -26,6 +26,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:background="@drawable/ic_edit_text_background_shape">
+
                 <ImageView
                     android:layout_width="45dp"
                     android:layout_height="match_parent"
@@ -35,22 +36,12 @@
                     android:src="@drawable/ic_account_circle_black_24dp" />
 
                 <EditText
-                    android:text="eslam"
                     android:id="@+id/name"
+                    style="@style/edit_style"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginRight="4dp"
-                    android:background="@color/white"
-                    android:gravity="start"
+                    android:layout_height="match_parent"
                     android:hint="@string/name"
-                    android:imeOptions="actionDone"
-                    android:inputType="textEmailAddress"
-                    android:maxLines="1"
-                    android:textAlignment="viewStart" />
+                    tools:text="eslam" />
             </LinearLayout>
 
             <LinearLayout
@@ -59,6 +50,7 @@
                 android:layout_margin="16dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/ic_edit_text_background_shape">
+
                 <ImageView
                     android:layout_width="45dp"
                     android:layout_height="match_parent"
@@ -69,22 +61,12 @@
 
 
                 <EditText
-                    android:text="eslam.faisal.ef@gmail.com"
                     android:id="@+id/email"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginRight="4dp"
-                    android:background="@color/white"
-                    android:gravity="start"
+                    style="@style/edit_style"
                     android:hint="@string/email"
-                    android:imeOptions="actionDone"
-                    android:inputType="textEmailAddress"
-                    android:maxLines="1"
-                    android:textAlignment="viewStart" />
+                    android:layout_height="match_parent"
+                    tools:text="eslam.faisal.ef@gmail.com" />
             </LinearLayout>
 
             <LinearLayout
@@ -94,6 +76,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/ic_edit_text_background_shape">
+
                 <ImageView
                     android:layout_width="45dp"
                     android:layout_height="match_parent"
@@ -104,22 +87,11 @@
 
 
                 <EditText
-                    android:text="123456789"
                     android:id="@+id/password"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginRight="4dp"
-                    android:background="@color/white"
-                    android:gravity="start"
-                    android:hint="@string/password"
-                    android:imeOptions="actionDone"
-                    android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:textAlignment="viewStart" />
+                    style="@style/edit_style"
+                    android:layout_height="match_parent"
+                    android:hint="@string/password" />
 
             </LinearLayout>
 
@@ -130,6 +102,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/ic_edit_text_background_shape">
+
                 <ImageView
                     android:layout_width="45dp"
                     android:layout_height="match_parent"
@@ -140,22 +113,11 @@
 
 
                 <EditText
-                    android:text="01067457665"
                     android:id="@+id/phone"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginRight="4dp"
-                    android:background="@color/white"
-                    android:gravity="start"
+                    style="@style/edit_style"
                     android:hint="@string/phone"
-                    android:imeOptions="actionDone"
-                    android:inputType="phone"
-                    android:maxLines="1"
-                    android:textAlignment="viewStart" />
+                    android:layout_height="match_parent" />
 
             </LinearLayout>
 
@@ -166,6 +128,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/ic_edit_text_background_shape">
+
                 <ImageView
                     android:layout_width="45dp"
                     android:layout_height="match_parent"
@@ -175,22 +138,11 @@
                     android:src="@drawable/ic_city_location" />
 
                 <EditText
-                    android:text="cairo"
                     android:id="@+id/city"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginRight="4dp"
-                    android:background="@color/white"
-                    android:gravity="start"
+                    style="@style/edit_style"
                     android:hint="@string/city"
-                    android:imeOptions="actionDone"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:textAlignment="viewStart" />
+                    android:layout_height="match_parent" />
 
             </LinearLayout>
 
@@ -201,6 +153,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/ic_edit_text_background_shape">
+
                 <ImageView
                     android:layout_width="45dp"
                     android:layout_height="match_parent"
@@ -211,22 +164,11 @@
 
 
                 <EditText
-                    android:text="123321123321"
                     android:id="@+id/national_id"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginRight="4dp"
-                    android:background="@color/white"
-                    android:gravity="start"
-                    android:hint="@string/national_id"
-                    android:imeOptions="actionDone"
-                    android:inputType="number"
-                    android:maxLines="1"
-                    android:textAlignment="viewStart" />
+                    style="@style/edit_style"
+                    android:layout_height="match_parent"
+                    android:hint="@string/national_id" />
 
             </LinearLayout>
 
@@ -237,6 +179,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/ic_edit_text_background_shape">
+
                 <ImageView
                     android:layout_width="45dp"
                     android:layout_height="match_parent"
@@ -246,23 +189,11 @@
                     android:src="@drawable/ic_car_id" />
 
                 <EditText
-                    android:text="54645"
                     android:id="@+id/car_id"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginRight="4dp"
-                    android:background="@color/white"
-                    android:gravity="start"
-                    android:hint="@string/car_id"
-                    android:imeOptions="actionDone"
-                    android:inputType="number"
-                    android:maxLines="1"
-                    android:textAlignment="viewStart" />
-
+                    style="@style/edit_style"
+                    android:layout_height="match_parent"
+                    android:hint="@string/car_id" />
             </LinearLayout>
 
             <LinearLayout
@@ -272,6 +203,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/ic_edit_text_background_shape">
+
                 <ImageView
                     android:layout_width="45dp"
                     android:layout_height="match_parent"
@@ -281,22 +213,11 @@
                     android:src="@drawable/ic_car_color" />
 
                 <EditText
-                    android:text="red"
                     android:id="@+id/car_color"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginRight="4dp"
-                    android:background="@color/white"
-                    android:gravity="start"
-                    android:hint="@string/car_color"
-                    android:imeOptions="actionDone"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:textAlignment="viewStart" />
+                    style="@style/edit_style"
+                    android:layout_height="match_parent"
+                    android:hint="@string/car_color" />
 
             </LinearLayout>
 
@@ -307,6 +228,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/ic_edit_text_background_shape">
+
                 <ImageView
                     android:layout_width="45dp"
                     android:layout_height="match_parent"
@@ -316,24 +238,13 @@
                     android:src="@drawable/ic_car_model" />
 
                 <EditText
-                    android:text="2020"
                     android:id="@+id/car_model"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginRight="4dp"
-                    android:background="@color/white"
-                    android:gravity="start"
-                    android:hint="@string/car_model"
-                    android:imeOptions="actionDone"
-                    android:inputType="number"
-                    android:maxLines="1"
-                    android:textAlignment="viewStart" />
-
+                    style="@style/edit_style"
+                    android:layout_height="match_parent"
+                    android:hint="@string/car_model" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -619,7 +530,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
-                android:text="@string/register"
+                android:text="@string/register_account"
                 android:textColor="@color/white"
                 drawme:dm_backColor="@color/colorPrimary"
                 drawme:dm_backColorDisabled="@color/colorPrimary"
@@ -629,7 +540,7 @@
             <com.rafakob.drawme.DrawMeButton
                 android:id="@+id/logIn"
                 fontPath="fonts/AraHamahAlislam-Regular.ttf"
-                android:layout_width="match_parent"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:text="@string/login"

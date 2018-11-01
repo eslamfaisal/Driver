@@ -2,19 +2,14 @@ package com.fekrah.driver;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
-import android.os.Binder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bsk.floatingbubblelib.FloatingBubbleConfig;
 import com.bsk.floatingbubblelib.FloatingBubbleService;
@@ -60,7 +55,7 @@ public class FloatingService extends FloatingBubbleService {
                 String format = "geo:0,0?q=" + a1 + "," + a2 + "";
                 Uri uri = Uri.parse(format);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setPackage("com.google.android.apps.maps");
                 startActivity(intent);
                 setState(false);
@@ -76,7 +71,7 @@ public class FloatingService extends FloatingBubbleService {
                 String format = "geo:0,0?q=" + r1 + "," + r2 + "";
                 Uri uri = Uri.parse(format);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setPackage("com.google.android.apps.maps");
                 startActivity(intent);
                 setState(false);
@@ -89,8 +84,8 @@ public class FloatingService extends FloatingBubbleService {
         go_main.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent notifyIntent = new Intent(FloatingService.this, MainActivity.class);
-                notifyIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                Intent notifyIntent = new Intent(getApplicationContext(), MainActivity.class);
+                notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(notifyIntent);
                 setState(false);
                 onDestroy();

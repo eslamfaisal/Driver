@@ -39,11 +39,22 @@
 
         </android.support.design.widget.AppBarLayout>
 
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/no_inter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/appbar"
+            android:background="@android:color/holo_red_dark"
+            android:gravity="center"
+            android:text="@string/no_internet_connection"
+            android:textColor="@android:color/white">
+
+        </TextView>
         <LinearLayout
             android:id="@+id/pick_locations"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/appbar"
+            android:layout_below="@id/no_inter"
             android:background="@color/colorPrimary"
             android:orientation="vertical"
             android:visibility="gone">

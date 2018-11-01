@@ -150,15 +150,17 @@
     <string name="updated">تم التحديث</string>
     <string name="profile_image_required">الصورة الشخصية مطلوبة</string>
     <string name="profile_picture">الصورة الشخصية</string>
-    <string name="log_out">Log out</string>
+    <string name="log_out">تسجيل الخروج</string>
     <string name="bo_driver">لا يوجد سائقين بهذا البريد</string>
-    <string name="getting_locations">Getting location...</string>
-    <string name="available_balance">Available balance</string>
-    <string name="recharge">Recharge</string>
-    <string name="enter_your_code">Enter code to recharge</string>
-    <string name="charge_balance">Pleas Recharge your balance</string>
-    <string name="balance">Balance</string>
-    <string name="communicate">Communicate</string>
-    <string name="share_app">share</string>
+    <string name="getting_locations">جار جلب الموقع...</string>
+    <string name="available_balance">الرصيد المتاح</string>
+    <string name="recharge">شحن</string>
+    <string name="enter_your_code">ادخل الكود للشحن</string>
+    <string name="charge_balance">برجاء اعادة شحن رصيدك</string>
+    <string name="balance">الرصيد</string>
+    <string name="communicate">تواصل</string>
+    <string name="share_app">مشاركه</string>
+    <string name="register_account">انشاء حساب</string>
+    <string name="no_internet_connection">No Internet connection</string>
 
 </resources>
